@@ -1,22 +1,23 @@
 #pragma once
+
 #include "header.hpp"
 #ifndef TICK
 #define TICK
 
-#define milliseconds std::chrono::milliseconds
-#define seconds std::chrono::seconds
+using namespace std::chrono;
 #define sleep std::this_thread::sleep_for
 
 class Tick
 {
     public:
-    void passTick();
+    void startProgram();
 
-    // Cada tick vai ter 1 segundo
-    
     private:
+    void tickLoop();
+    const size_t tickIntervalMS {100}; // TICK INTERVAL
+    size_t getCurrentTimeMS(); 
     int currentTick{0};
 };
 
-#include "../src/Tick.cpp"
+#include "Tick.cpp"
 #endif // TICK

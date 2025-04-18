@@ -10,14 +10,12 @@ using namespace std::chrono;
 class Tick
 {
     public:
-    void startProgram();
-
+    size_t getCurrentTimeMS() const; 
+    size_t getTickIntervalMS() const {return tickIntervalMS;} 
     private:
-    void tickLoop();
     const size_t tickIntervalMS {100}; // TICK INTERVAL
-    size_t getCurrentTimeMS(); 
     int currentTick{0};
 };
 
-#include "Tick.cpp"
+#include "../src/Tick.cpp"
 #endif // TICK

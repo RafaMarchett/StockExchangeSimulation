@@ -1,14 +1,16 @@
 #pragma once
 #include "header.hpp"
+#include "Stock.h"
 #ifndef PORTIFOLIO
 #define PORTIFOLIO
 
 class Portifolio
 {
     public:
-    void buyStock(unique_ptr<Stock>& buyedStock);
+    void printFullPortifolio() const;
+    void buyStock(std::unique_ptr<Stock>& buyedStock);
     private:
-    map<string,unsigned int> portifolioStocks;
+    std::unordered_map<string,unsigned int> fullPortifolio;
 };
-
+#include "../src/Portifolio.cpp"
 #endif // PORTIFOLIO

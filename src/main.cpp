@@ -1,18 +1,26 @@
 #include "../headers/header.hpp"
-#include "Tick.h"
-#include <map>
+#include "../headers/Tick.h"
+#include <unordered_map>
 
 int main(int agrc,char* argv[])
 {
-    /*
-    Tick mainProgram; 
-    mainProgam.startProgram();
-    */
-    using namespace std;
-    map<int,string> a = {
-        {1,"hihi"}, {2,"heha"}
+    Tick mainTick; 
+    size_t lastTickMS = mainTick.getCurrentTimeMS();
+    while (1) 
+    {
+        size_t currentTimeMS = mainTick.getCurrentTimeMS();
         
-    };
-    // if(a) VER UNORDED MAP PARA TESTAR
+        bool passTick = currentTimeMS - lastTickMS >= mainTick.getTickIntervalMS();
+        if (passTick) 
+        {
+            // TICK LOGIC
+
+            lastTickMS = currentTimeMS;
+        }
+
+        size_t timeToNextTickMS = (lastTickMS + mainTick.getTickIntervalMS()) - currentTimeMS;
+        sleep(milliseconds(timeToNextTickMS));
+    }
+
     return 0;
 }

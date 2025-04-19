@@ -1,8 +1,10 @@
 #ifdef STOCK
-#include "Stock.h"
+#include "../headers/Stock.h"
 
-// void Stock::buy(unique_ptr<Portifolio>& buyerPortifolio)
-// {
-//     buyerPortifolio->buy
-// }
+Stock::Stock(float price, string ticker, string companyName)
+: _price(price), _ticker(ticker), _companyName(companyName)
+{
+  // add acao mercado
+}
+
 #endif // STOCK

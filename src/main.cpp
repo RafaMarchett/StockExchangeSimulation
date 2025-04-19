@@ -1,11 +1,14 @@
 #include "../headers/header.hpp"
 #include "../headers/Tick.h"
-#include <unordered_map>
+#include "../headers/Stock.h"
+#include "../headers/Market.h"
+#include "../headers/Menus.h"
+#include "../headers/Portifolio.h"
 
 int main(int agrc,char* argv[])
 {
-    Tick mainTick; 
     size_t lastTickMS = mainTick.getCurrentTimeMS();
+
     while (1) 
     {
         size_t currentTimeMS = mainTick.getCurrentTimeMS();
@@ -14,7 +17,7 @@ int main(int agrc,char* argv[])
         if (passTick) 
         {
             // TICK LOGIC
-
+            Menus::homeMenu();
             lastTickMS = currentTimeMS;
         }
 

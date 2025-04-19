@@ -3,14 +3,21 @@
 #include "Stock.h"
 #ifndef PORTIFOLIO
 #define PORTIFOLIO
-
 class Portifolio
 {
     public:
     void printFullPortifolio() const;
-    void buyStock(std::unique_ptr<Stock>& buyedStock);
+    void buyStock(const unique_ptr<Stock>&, const size_t&);
+    void sellStock(const unique_ptr<Stock>&, const size_t&);
     private:
-    std::unordered_map<string,unsigned int> fullPortifolio;
-};
+    struct stockData
+    {
+        size_t totalStocks;
+        float averagePrice;
+    };
+
+    std::unordered_map<string,stockData> fullPortifolio;
+}userPortifiolio;
+
 #include "../src/Portifolio.cpp"
 #endif // PORTIFOLIO

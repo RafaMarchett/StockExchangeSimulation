@@ -15,7 +15,7 @@ class Tick
     private:
     const size_t tickIntervalMS {100}; // TICK INTERVAL
     int currentTick{0};
-};
+}mainTick;
 
 #include "../src/Tick.cpp"
 #endif // TICK

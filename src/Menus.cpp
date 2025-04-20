@@ -1,4 +1,4 @@
-// #ifdef MENUS
+#ifdef MENUS
 #include "../headers/Menus.h"
 
-// #endif
+#endif

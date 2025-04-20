@@ -7,8 +7,10 @@
 
 int main(int agrc,char* argv[])
 {
+    configureFloat();
     size_t lastTickMS = mainTick.getCurrentTimeMS();
-
+    Menus::homeMenu();
+    
     while (1) 
     {
         size_t currentTimeMS = mainTick.getCurrentTimeMS();
@@ -17,7 +19,6 @@ int main(int agrc,char* argv[])
         if (passTick) 
         {
             // TICK LOGIC
-            Menus::homeMenu();
             lastTickMS = currentTimeMS;
         }
 

@@ -1,25 +1,41 @@
 #ifdef PORTIFOLIO
 #include "../headers/Portifolio.h"
 
-void Portifolio::buyStock(const unique_ptr<Stock>& buyedStock, const size_t& stockCount)
+float Portifolio::calculateAveragePrice(const uniqueStock& buyedStock, float buyedPrice,int buyedQuantity)
+{
+  auto currentStockSecond = fullPortifolio.find(buyedStock->getTicker())->second;
+  return (currentStockSecond.averagePrice * currentStockSecond.totalStocks + buyedPrice * buyedQuantity) / (buyedQuantity+currentStockSecond.totalStocks);
+}
+
+void Portifolio::calculateTotalParticipation(const uniqueStock& stock)
+{
+    auto& stockInPortifolioSecond = fullPortifolio.find(stock->getTicker())->second;
+    stockInPortifolioSecond.totalParticipation = stockInPortifolioSecond.averagePrice * stockInPortifolioSecond.totalStocks;
+}
+
+void Portifolio::buyStock(const uniqueStock& buyedStock, const size_t& stockCount)
 {
   if(buyedStock && stockCount > 0){
     if(fullPortifolio.find(buyedStock->getTicker()) != fullPortifolio.end())
     {
-        fullPortifolio.find(buyedStock->getTicker())->second.totalStocks+=stockCount;
+      auto stockInPortifolio = fullPortifolio.find(buyedStock->getTicker());
+      stockInPortifolio->second.averagePrice = calculateAveragePrice(buyedStock,buyedStock->getPrice(),stockCount);
+      stockInPortifolio->second.totalStocks += stockCount;
     }
     else
     {
-        fullPortifolio.insert({buyedStock->getTicker(),{stockCount,buyedStock->getPrice()}});
+      fullPortifolio.insert({buyedStock->getTicker(),{stockCount,buyedStock->getPrice()}});
     }
+  calculateTotalParticipation(buyedStock);
   }
 }
 
-void Portifolio::sellStock(const unique_ptr<Stock>& selledStock, const size_t& stockCounter) 
+void Portifolio::sellStock(const uniqueStock& selledStock, const size_t& stockCounter) 
 {
   auto& totalStocksInPortifolio = fullPortifolio.find(selledStock->getTicker())->second.totalStocks; 
-    if(totalStocksInPortifolio >= stockCounter){
+    if(totalStocksInPortifolio >= stockCounter && selledStock){
       totalStocksInPortifolio -= stockCounter;
+      calculateTotalParticipation(selledStock);
     } 
     else{
       cout << "Você não possuí ações suficientes para vender\n";
@@ -29,7 +45,7 @@ void Portifolio::printFullPortifolio() const
 {
   for(auto& stock : fullPortifolio)
   {
-    cout << bold << stock.first << noBold << " Preço médio: " << stock.second.averagePrice << " Quantidade: " << stock.second.totalStocks << '\n';
+    cout << bold << stock.first << noBold << " Preço médio: " << stock.second.averagePrice << " Quantidade: " << stock.second.totalStocks << bold << "   TOTAL: " << stock.second.totalParticipation << noBold << '\n';
   }
 
 }

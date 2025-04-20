@@ -8,9 +8,9 @@ class Market
 {
 public:
   Market();
-  void addNewStock(unique_ptr<Stock>&);
+  void addNewStock(uniqueStock&);
 private:
-  std::unordered_map<string,unique_ptr<Stock>> allStocks;
+  std::unordered_map<string,uniqueStock> allStocks;
 }mainMarket;
 
 #include "../src/Market.cpp"

@@ -18,7 +18,6 @@ class Stock
     
     
 };
-using uniqueStock = std::unique_ptr<Stock>;
 
 #include "../src/Stock.cpp"
 #endif // STOCK

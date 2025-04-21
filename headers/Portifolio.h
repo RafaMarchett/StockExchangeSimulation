@@ -7,8 +7,8 @@ class Portifolio
 {
     public:
     void printFullPortifolio() const;
-    void buyStock(const uniqueStock&, const size_t&);
-    void sellStock(const uniqueStock&, const size_t&);
+    void buyStock(const std::unique_ptr<Stock>&, const size_t&);
+    void sellStock(const std::unique_ptr<Stock>&, const size_t&);
     private:
     struct stockData
     {
@@ -16,8 +16,8 @@ class Portifolio
         float averagePrice;
         float totalParticipation = totalStocks*averagePrice;
     };
-    float calculateAveragePrice(const uniqueStock&,float,int);
-    void calculateTotalParticipation(const uniqueStock&);
+    float calculateAveragePrice(const std::unique_ptr<Stock>&,float,int);
+    void calculateTotalParticipation(const std::unique_ptr<Stock>&);
 
     std::unordered_map<std::string,stockData> fullPortifolio;
 }userPortifiolio;

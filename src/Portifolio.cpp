@@ -1,19 +1,19 @@
 #ifdef PORTIFOLIO
 #include "../headers/Portifolio.h"
 
-float Portifolio::calculateAveragePrice(const uniqueStock& buyedStock, float buyedPrice,int buyedQuantity)
+float Portifolio::calculateAveragePrice(const std::unique_ptr<Stock>& buyedStock, float buyedPrice,int buyedQuantity)
 {
   auto currentStockSecond = fullPortifolio.find(buyedStock->getTicker())->second;
   return (currentStockSecond.averagePrice * currentStockSecond.totalStocks + buyedPrice * buyedQuantity) / (buyedQuantity+currentStockSecond.totalStocks);
 }
 
-void Portifolio::calculateTotalParticipation(const uniqueStock& stock)
+void Portifolio::calculateTotalParticipation(const std::unique_ptr<Stock>& stock)
 {
     auto& stockInPortifolioSecond = fullPortifolio.find(stock->getTicker())->second;
     stockInPortifolioSecond.totalParticipation = stockInPortifolioSecond.averagePrice * stockInPortifolioSecond.totalStocks;
 }
 
-void Portifolio::buyStock(const uniqueStock& buyedStock, const size_t& stockCount)
+void Portifolio::buyStock(const std::unique_ptr<Stock>& buyedStock, const size_t& stockCount)
 {
   if(buyedStock && stockCount > 0){
     if(fullPortifolio.find(buyedStock->getTicker()) != fullPortifolio.end())
@@ -30,7 +30,7 @@ void Portifolio::buyStock(const uniqueStock& buyedStock, const size_t& stockCoun
   }
 }
 
-void Portifolio::sellStock(const uniqueStock& selledStock, const size_t& stockCounter) 
+void Portifolio::sellStock(const std::unique_ptr<Stock>& selledStock, const size_t& stockCounter) 
 {
   auto& totalStocksInPortifolio = fullPortifolio.find(selledStock->getTicker())->second.totalStocks; 
     if(totalStocksInPortifolio >= stockCounter && selledStock){

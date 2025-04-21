@@ -2,7 +2,7 @@
 #include "../headers/Market.h"
 Market::Market()
 {
-  uniqueStock tempStocks[] = {
+  std::unique_ptr<Stock> tempStocks[] = {
               std::make_unique<Stock>(30.42f,"RLS3","Ralsey's Hat"),
               std::make_unique<Stock>(100.31f,"MEG3","Major Explorer Group"),
               std::make_unique<Stock>(25.10f,"GLOB3","GlobalTech Solutions"),
@@ -22,7 +22,7 @@ Market::Market()
   }
 }
 
-void Market::addNewStock(uniqueStock& newStock)
+void Market::addNewStock(std::unique_ptr<Stock>& newStock)
 {
   if(newStock){
     allStocks.emplace(newStock->getTicker(),std::move(newStock));

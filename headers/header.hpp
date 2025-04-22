@@ -8,9 +8,9 @@
 #include <thread>
 #include <unordered_map>
 
-using std::ostream, std::cout, std::cin, std::string, std::unique_ptr, std::shared_ptr, std::make_unique;
+// using std::ostream, std::std::cout, std::std::cin, std::std::string, std::std::unique_ptr, std::shared_ptr, std::std::make_unique;
 
-ostream& bold(ostream& manip) {return manip << "\033[1m";}
-ostream& noBold(ostream& manip) {return manip << "\033[0m";}
+std::ostream& bold(std::ostream& manip) {return manip << "\033[1m";}
+std::ostream& noBold(std::ostream& manip) {return manip << "\033[0m";}
 
-void configureFloat() {cout << std::fixed << std::setprecision(2);}
+void configureFloat() {std::cout << std::fixed << std::setprecision(2);}

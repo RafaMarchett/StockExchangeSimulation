@@ -10,7 +10,7 @@ public:
   Market();
   void addNewStock(uniqueStock&);
 private:
-  std::unordered_map<string,uniqueStock> allStocks;
+  std::unordered_map<std::string,uniqueStock> allStocks;
 }mainMarket;
 
 #include "../src/Market.cpp"

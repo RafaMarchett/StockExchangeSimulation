@@ -7,11 +7,11 @@ class Menus
 public:
   static void homeMenu()
   {
-    cout << "ha\n";
+    std::cout << "ha\n";
   }
   // static void (); menu de negociacao
 private:
-  
+  Menus();
 };
 #include "../src/Menus.cpp"
 #endif // MENUS

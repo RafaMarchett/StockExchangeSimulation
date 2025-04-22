@@ -38,14 +38,14 @@ void Portifolio::sellStock(const uniqueStock& selledStock, const size_t& stockCo
       calculateTotalParticipation(selledStock);
     } 
     else{
-      cout << "Você não possuí ações suficientes para vender\n";
+      std::cout << "Você não possuí ações suficientes para vender\n";
     }
 }
 void Portifolio::printFullPortifolio() const
 {
   for(auto& stock : fullPortifolio)
   {
-    cout << bold << stock.first << noBold << " Preço médio: " << stock.second.averagePrice << " Quantidade: " << stock.second.totalStocks << bold << "   TOTAL: " << stock.second.totalParticipation << noBold << '\n';
+    std::cout << bold << stock.first << noBold << " Preço médio: " << stock.second.averagePrice << " Quantidade: " << stock.second.totalStocks << bold << "   TOTAL: " << stock.second.totalParticipation << noBold << '\n';
   }
 
 }

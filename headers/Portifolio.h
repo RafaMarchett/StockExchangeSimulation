@@ -19,7 +19,7 @@ class Portifolio
     float calculateAveragePrice(const uniqueStock&,float,int);
     void calculateTotalParticipation(const uniqueStock&);
 
-    std::unordered_map<string,stockData> fullPortifolio;
+    std::unordered_map<std::string,stockData> fullPortifolio;
 }userPortifiolio;
 
 #include "../src/Portifolio.cpp"

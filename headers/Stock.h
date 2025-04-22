@@ -6,15 +6,15 @@
 class Stock
 {
     public:
-    Stock(float, string, string);
-    // void buy(std::unique_ptr<Portifolio>&);
+    Stock(float, std::string, std::string);
+    // void buy(std::std::unique_ptr<Portifolio>&);
     // void sell();
-    string getTicker() const {return _ticker;}
+    std::string getTicker() const {return _ticker;}
     float getPrice() const {return _price;}
     void setPrice(float price) {_price = price;}
     private:
     float _price{0.0f};
-    string _ticker, _companyName;
+    std::string _ticker, _companyName;
     
     
 };

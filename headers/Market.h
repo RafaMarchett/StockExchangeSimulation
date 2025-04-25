@@ -1,17 +1,19 @@
 #pragma once
-#include "header.hpp"
 #include "Stock.h"
+#include "header.hpp"
 #ifndef MARKET
 #define MARKET
-
-class Market
-{
+class Stock;
+class Market {
 public:
-  Market();
-  void addNewStock(uniqueStock&);
+  void addNewStock(sharedStock &);
+  static Market &getMarket();
+  void updateAllStocksPrice();
+
 private:
-  std::unordered_map<string,uniqueStock> allStocks;
-}mainMarket;
+  Market();
+  std::unordered_map<string, sharedStock> allStocks;
+};
 
 #include "../src/Market.cpp"
 #endif // MARKET

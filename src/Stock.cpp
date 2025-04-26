@@ -1,9 +1,21 @@
-// #ifdef STOCK
+#ifdef STOCK
 #include "../headers/Stock.h"
+#include "../headers/Market.h"
 
 string Stock::getTicker() const { return _ticker; }
 float Stock::getPrice() const { return _price; }
 void Stock::setPrice(float price) { _price = price; }
+string Stock::getArrow() {
+  size_t Size = priceHistory.size();
+  if(Size >= 2){
+   if (priceHistory.at(Size-1) >= priceHistory.at(Size-2))
+      return upArrow;
+    else
+     return downArrow;
+  }
+  else return "";
+}
+string Stock::getCompanyName() const { return _companyName; }
 
 Stock::Stock(float price, string ticker, string companyName)
     : _price(price), _ticker(ticker), _companyName(companyName) {}
@@ -18,4 +30,12 @@ void Stock::randomPriceUpdate() {
   randNumber /= 100;
   setPrice(getPrice() * randNumber);
 }
-// #endif // STOCK
+
+void Stock::printStockInMarket() {
+  Market tempMarket = Market::getMarket();
+  size_t stockNumber = tempMarket.getNumberOfStocks();
+
+  cout << setw(40) << getCompanyName() << " | " << setw(7) << getTicker()
+       << " | " << setw(7) << getPrice() << " | " << getArrow();
+}
+#endif // STOCK

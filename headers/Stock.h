@@ -1,5 +1,4 @@
 #pragma once
-#include "Market.h"
 #include "Tick.h"
 #include "header.hpp"
 #ifndef STOCK
@@ -14,13 +13,17 @@ public:
   string getTicker() const;
   float getPrice() const;
   void setPrice(float);
+  string getCompanyName() const;
   void randomPriceUpdate();
+  void printStockInMarket();
+  string getArrow();
 
   Stock(float, string, string);
 
 private:
   float _price{0.0f};
   string _ticker, _companyName;
+  vector<float> priceHistory;
 };
 
 #include "../src/Stock.cpp"

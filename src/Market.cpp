@@ -1,5 +1,6 @@
 #ifdef MARKET
 #include "../headers/Market.h"
+#include "../headers/Stock.h"
 Market::Market() {
   sharedStock tempStocks[] = {
       make_shared<Stock>(30.42f, "RLS3", "Ralsey's Hat"),
@@ -20,6 +21,13 @@ Market::Market() {
   }
 }
 
+void Market::outputPointer_PrintStocks() {
+  string moveUp = "\x1B[" + std::to_string(getNumberOfStocks()) + "A";
+  cout << moveUp << std::flush;
+}
+void Market::setStockOnScreen(bool newState) { stocksOnScreen = newState; }
+size_t Market::getNumberOfStocks() { return _numberOfStocks; }
+
 Market &Market::getMarket() {
   static Market mkt;
   return mkt;
@@ -31,9 +39,24 @@ void Market::updateAllStocksPrice() {
   }
 }
 
+void Market::printAllStocks() {
+  if (stocksOnScreen) {
+    outputPointer_PrintStocks();
+
+    for (auto &stock : allStocks) {
+      stocksOnScreen = true;
+      if (!stocksOnScreen)
+        return;
+
+      stock.second->printStockInMarket();
+      cout << '\n';
+    }
+  }
+}
 void Market::addNewStock(sharedStock &newStock) {
   if (newStock) {
     allStocks.emplace(newStock->getTicker(), std::move(newStock));
+    _numberOfStocks = allStocks.size();
   }
 }
 #endif // MARKET

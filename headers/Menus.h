@@ -2,16 +2,16 @@
 #include "header.hpp"
 #ifndef MENUS
 #define MENUS
-class Menus
-{
+class Menus {
 public:
-  static void homeMenu()
-  {
+  static void homeMenu() {
     cout << "ha\n";
+    changeStockOnScreen(false);
   }
+  static void allStocksMenu() {}
   // static void (); menu de negociacao
 private:
-  
+  static void changeStockOnScreen(bool);
 };
 #include "../src/Menus.cpp"
 #endif // MENUS

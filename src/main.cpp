@@ -13,15 +13,12 @@ int main(int agrc, char *argv[]) {
 
   Portifolio mainPortifolio = Portifolio::getPortifolio();
   Market mainMarket = Market::getMarket();
+  size_t tickCounter{0};
   while (1) {
-    size_t currentTimeMS = mainTick.getCurrentTimeMS(), tickCounter{0};
+    size_t currentTimeMS = mainTick.getCurrentTimeMS();
 
     bool passTick = currentTimeMS - lastTickMS >= mainTick.getTickIntervalMS();
     if (passTick) {
-      // TICK LOGIC
-      if (tickCounter % 10 == 0) {
-        mainMarket.updateAllStocksPrice();
-      }
       ++tickCounter;
       lastTickMS = currentTimeMS;
     }

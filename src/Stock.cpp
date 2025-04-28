@@ -3,7 +3,7 @@
 
 string Stock::getTicker() const { return _ticker; }
 float Stock::getPrice() const { return _price; }
-void Stock::setPrice(float price) { _price = price; }
+void Stock::setPrice(float price) { _price = price; priceHistory.insert(priceHistory.begin(),price);}
 string Stock::getArrow() {
   size_t Size = priceHistory.size();
   if(Size >= 2){

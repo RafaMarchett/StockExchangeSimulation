@@ -1,4 +1,3 @@
-#ifdef PORTIFOLIO
 #include "../headers/Portifolio.h"
 
 Portifolio &Portifolio::getPortifolio() {
@@ -58,4 +57,3 @@ void Portifolio::printFullPortifolio() const {
          << "   TOTAL: " << stock.second.totalParticipation << noBold << '\n';
   }
 }
-#endif // PORTIFOLIO

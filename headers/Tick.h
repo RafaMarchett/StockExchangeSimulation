@@ -19,5 +19,4 @@ private:
   int currentTick{0};
 };
 
-#include "../src/Tick.cpp"
 #endif // TICK

@@ -1,4 +1,3 @@
-#ifdef TICK
 #include "../headers/Tick.h"
 
 Tick &Tick::getInstance() {
@@ -10,5 +9,3 @@ size_t Tick::getCurrentTimeMS() const {
   return duration_cast<milliseconds>(system_clock::now().time_since_epoch())
       .count();
 }
-
-#endif // TICK

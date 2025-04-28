@@ -22,5 +22,4 @@ private:
   std::unordered_map<string, stockData> fullPortifolio;
 };
 
-#include "../src/Portifolio.cpp"
 #endif // PORTIFOLIO

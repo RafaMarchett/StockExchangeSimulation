@@ -9,8 +9,8 @@ int main(int agrc, char *argv[]) {
   Tick mainTick = Tick::getInstance();
   configureFloat();
   size_t lastTickMS = mainTick.getCurrentTimeMS();
-  Menus::homeMenu();
-
+  Menus::firstInitialization();
+  std::function<void()> currentMenu = Menus::homeMenu();
   Portifolio mainPortifolio = Portifolio::getPortifolio();
   Market mainMarket = Market::getMarket();
   size_t tickCounter{0};
@@ -19,6 +19,13 @@ int main(int agrc, char *argv[]) {
 
     bool passTick = currentTimeMS - lastTickMS >= mainTick.getTickIntervalMS();
     if (passTick) {
+      // TICK LOGIC
+      if (tickCounter % 10 == 0) {
+        mainMarket.updateAllStocksPrice();
+        currentMenu();
+      }
+
+      mainMarket.printAllStocks();
       ++tickCounter;
       lastTickMS = currentTimeMS;
     }

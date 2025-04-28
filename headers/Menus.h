@@ -1,17 +1,19 @@
 #pragma once
+#include "Market.h"
 #include "header.hpp"
+#include <functional>
 #ifndef MENUS
 #define MENUS
 class Menus {
 public:
-  static void homeMenu() {
-    cout << "ha\n";
-    changeStockOnScreen(false);
-  }
-  static void allStocksMenu() {}
-  // static void (); menu de negociacao
+  static void firstInitialization();
+  static std::function<void()> homeMenu();
+
 private:
+  Menus();
+  static void voidMenu();
+  static std::function<void()> allStocksMenu();
   static void changeStockOnScreen(bool);
+  static std::function<void()> homeMenuOptions(char);
 };
-#include "../src/Menus.cpp"
 #endif // MENUS

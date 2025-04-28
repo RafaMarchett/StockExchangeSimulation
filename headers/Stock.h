@@ -26,5 +26,4 @@ private:
   vector<float> priceHistory;
 };
 
-#include "../src/Stock.cpp"
 #endif // STOCK

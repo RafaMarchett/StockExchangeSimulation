@@ -13,6 +13,7 @@ public:
   void printAllStocks();
   size_t getNumberOfStocks();
   void setStockOnScreen(bool);
+  bool getStockOnScreen() const;
 
 private:
   Market();
@@ -22,5 +23,4 @@ private:
   std::unordered_map<string, sharedStock> allStocks;
 };
 
-#include "../src/Market.cpp"
 #endif // MARKET

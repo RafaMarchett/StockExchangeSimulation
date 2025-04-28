@@ -1,4 +1,3 @@
-#ifdef STOCK
 #include "../headers/Stock.h"
 #include "../headers/Market.h"
 
@@ -9,9 +8,8 @@ string Stock::getArrow() {
   size_t Size = priceHistory.size();
   if(Size >= 2){
    if (priceHistory.at(Size-1) >= priceHistory.at(Size-2))
-      return upArrow;
-    else
-     return downArrow;
+   {return upArrow;} else
+    {return downArrow;}
   }
   else return "";
 }
@@ -32,10 +30,6 @@ void Stock::randomPriceUpdate() {
 }
 
 void Stock::printStockInMarket() {
-  Market tempMarket = Market::getMarket();
-  size_t stockNumber = tempMarket.getNumberOfStocks();
-
   cout << setw(40) << getCompanyName() << " | " << setw(7) << getTicker()
        << " | " << setw(7) << getPrice() << " | " << getArrow();
 }
-#endif // STOCK

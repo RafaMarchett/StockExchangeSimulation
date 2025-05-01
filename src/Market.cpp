@@ -62,3 +62,9 @@ void Market::addNewStock(sharedStock &newStock) {
     _numberOfStocks = allStocks.size();
   }
 }
+
+void Market::setAllMembers(const _Market::allMembers &inputStruct) {
+  stocksOnScreen = inputStruct.stocksOnScreen;
+  _numberOfStocks = inputStruct._numberOfStocks;
+  allStocks = inputStruct.allStocks;
+}

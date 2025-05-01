@@ -9,3 +9,10 @@ size_t Tick::getCurrentTimeMS() const {
   return duration_cast<milliseconds>(system_clock::now().time_since_epoch())
       .count();
 }
+
+size_t Tick::getCurrentTick() const { return currentTick; }
+void Tick::incrementTick() { currentTick++; }
+
+void Tick::setAllMembers(_Tick::allMembers inputStruct) {
+  currentTick = inputStruct.currentTick;
+}

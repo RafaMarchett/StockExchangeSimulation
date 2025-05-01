@@ -57,3 +57,8 @@ void Portifolio::printFullPortifolio() const {
          << "   TOTAL: " << stock.second.totalParticipation << noBold << '\n';
   }
 }
+
+void Portifolio::setAllMembers(const _Portifolio::allMembers &inputStruct) {
+  fullPortifolio.insert(inputStruct.fullPortifolio.begin(),
+                        inputStruct.fullPortifolio.end());
+}

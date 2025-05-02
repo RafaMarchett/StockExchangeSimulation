@@ -11,7 +11,7 @@ void Menus::firstInitialization() {
   changeStockOnScreen(false);
   do {
     cout << "\nEnter 1 for English\n"
-         << "Ou 2 para Portugues\n>>> " << std::flush;
+         << "Insira 2 para Portugues\n>>> " << std::flush;
     inputIgnore(opt);
     if (opt == '1' || opt == '2') {
       language = opt;

@@ -5,12 +5,13 @@ string Stock::getTicker() const { return _ticker; }
 float Stock::getPrice() const { return _price; }
 void Stock::setPrice(float price) {
   _price = price;
-  priceHistory.insert(priceHistory.begin(), price);
+  priceHistory.insert(priceHistory.end(), price);
 }
 string Stock::getArrow() {
-  size_t Size = priceHistory.size();
+  size_t&& Size = priceHistory.size();
+  size_t&& lastElement{Size-1},secondlastElement{Size-2};
   if (Size >= 2) {
-    if (priceHistory.at(Size - 1) >= priceHistory.at(Size - 2)) {
+    if (priceHistory.at(lastElement) >= priceHistory.at(secondlastElement)) {
       return upArrow;
     } else {
       return downArrow;

@@ -25,10 +25,7 @@ void Market::outputPointer_PrintStocks() {
   cout << moveUp << std::flush;
 }
 bool Market::getStockOnScreen() const { return stocksOnScreen; }
-void Market::setStockOnScreen(bool newState) {
-  stocksOnScreen = newState;
-  cout << "\n\aNewState: " << newState << std::endl;
-}
+void Market::setStockOnScreen(bool newState) { stocksOnScreen = newState; }
 size_t Market::getNumberOfStocks() { return _numberOfStocks; }
 
 Market &Market::getMarket() {

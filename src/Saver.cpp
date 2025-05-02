@@ -1,10 +1,9 @@
 #include "../headers/Saver.h"
-#include "../headers/Class1.h"
 
 void Saver::saveElement(std::ofstream &File, string &inputString) {
   if (!File.good()) {
     std::cerr
-        << "Erro: Stream de saída não está em bom estado para salvar string."
+        << "Error: Output stream is not in good condition"
         << std::endl;
     File.setstate(std::ios::failbit);
     return;
@@ -13,14 +12,14 @@ void Saver::saveElement(std::ofstream &File, string &inputString) {
   size_t size = inputString.size();
   File.write(reinterpret_cast<const char *>(&size), sizeof(size));
   if (!File.good()) {
-    std::cerr << "Erro ao escrever o tamanho da string (" << size
-              << ") para o arquivo." << std::endl;
+    std::cerr << "Error writing string size (" << size
+              << ") to the file" << std::endl;
     return;
   }
   if (size > 0) {
     File.write(inputString.c_str(), size);
     if (!File.good()) {
-      std::cerr << "Erro ao escrever o conteúdo da string para o arquivo."
+      std::cerr << "Error writing string content to file"
                 << std::endl;
       return;
     }
@@ -51,19 +50,6 @@ void Saver::createFile() {
   newFile.close();
 }
 
-/*
-void Saver::_saveFile(Tst& inputClass){
-    auto allMembers = inputClass.getAllMembers();
-    auto File = saveFile();
-    if(!File) { std::cout << "Error in _Save(Tst) File"; exit(ERROR_FILE);}
-    saveVar(File,allMembers.data);
-    // File.write(reinterpret_cast<char
-*>(&allMembers.data),sizeof(allMembers.data));
-
-    saveString(File,allMembers.hi);
-}
-*/
-
 std::ofstream Saver::saveFile() {
   createFile();
   std::ofstream File(fileName, std::ios::binary | std::ios::in);
@@ -82,15 +68,8 @@ std::ifstream Saver::readFile() {
   }
   return File;
 }
-/*
-void Saver::_readFile(Tst &inputClass){
-    auto File = readFile();
-    _Tst::allMembers newStruct;
-    readVar(File,newStruct.data);
-    // File.read(reinterpret_cast<char *>(&newStruct.data),
-sizeof(newStruct.data));
 
-    readString(File,newStruct.hi);
-    inputClass.setAllMembers(newStruct);
+void Saver::notClass(){
+  cout << "ERROR: Called saveClass but did not receive a class" << std::endl;
+  exit(CLASS_NOT_RECEIVED);
 }
-*/

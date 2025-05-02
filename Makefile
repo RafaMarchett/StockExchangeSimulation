@@ -8,8 +8,7 @@ SRCS = $(SRCDIR)/main.cpp \
        $(SRCDIR)/Market.cpp \
        $(SRCDIR)/Menus.cpp \
        $(SRCDIR)/Saver.cpp \
-       $(SRCDIR)/Tick.cpp \
-       $(SRCDIR)/Class1.cpp
+       $(SRCDIR)/Tick.cpp 
 
 OBJS = $(patsubst $(SRCDIR)/%.cpp, $(BUILDDIR)/%.o, $(SRCS))
 

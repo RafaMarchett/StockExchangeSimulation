@@ -1,5 +1,4 @@
 
-#include "../headers/Class1.h"
 #include "../headers/Market.h"
 #include "../headers/Menus.h"
 #include "../headers/Portifolio.h"
@@ -10,6 +9,9 @@
 #define TST 0
 #define SAV 1
 #define READ 1
+
+template <typename... Args> void saveAllClasses(Args &&...);
+template <typename... Args> void readAllClasses(Args &&...);
 
 int main(int agrc, char *argv[]) {
 #if TST
@@ -60,4 +62,14 @@ int main(int agrc, char *argv[]) {
   }
 #endif
   return 0;
+}
+
+template <typename... Args> void saveAllClasses(Args &&...args) {
+  Saver saverInstance;
+  ((saverInstance.saveClass(std::forward<Args>(args)), ...));
+}
+template <typename... Args> void readAllClasses(Args &&...args) {
+
+  Saver saverInstance;
+  ((saverInstance.readClass(std::forward<Args>(args)), ...));
 }

@@ -71,8 +71,7 @@ template <typename T> void Saver::saveClass(T &allMembers) {
     saveElement(File, allMembers);
 
   } else {
-    cout << "ERROR: Called saveClass but did not receive a class" << std::endl;
-    exit(CLASS_NOT_RECEIVED);
+    notClass();
   }
 }
 template <typename T> void Saver::readClass(T &allMembers) {
@@ -85,8 +84,7 @@ template <typename T> void Saver::readClass(T &allMembers) {
     auto allMembersTuple = allMembers.toTuple();
     saveElement(File, allMembers);
   } else {
-    cout << "ERROR: Called readClass but did not receive a class" << std::endl;
-    exit(CLASS_NOT_RECEIVED);
+    notClass();
   }
 }
 
@@ -97,7 +95,13 @@ void Saver::saveElement(std::ofstream &File, T &inputStruct) {
 }
 
 template <IsStruct T> void readElement(std::ifstream &File, T &inputStruct) {
-
   auto inputTuple = inputStruct.toTuple();
   forEachInTuple(inputTuple, [&](auto &it) { readElement(File, it); });
+}
+
+template <typename... Args> void Saver::saveAllClasses(Args &&...args) {
+  ((saveClass(std::forward<Args>(args)), ...));
+}
+template <typename... Args> void Saver::readAllClasses(Args &&...args) {
+  ((readClass(std::forward<Args>(args)), ...));
 }

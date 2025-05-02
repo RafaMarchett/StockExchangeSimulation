@@ -7,13 +7,14 @@
 
 class Saver {
 public:
-  // void _saveFile(Tst&);
-  // void _readFile(Tst&);
+  template <typename... Args> void saveAllClasses(Args &&...);
+  template <typename... Args> void readAllClasses(Args &&...);
+
+private:
   template <typename T> void saveClass(T &);
   template <typename T> void readClass(T &);
   void truncFile();
 
-  //////////////////////////////////////////////////////////////////////////
   template <typename T> void saveElement(std::ofstream &, vector<T> &);
   template <typename T> void saveElement(std::ofstream &, T &);
 
@@ -32,13 +33,12 @@ public:
   template <typename key, typename value>
   void readElement(std::ifstream &, std::unordered_map<key, value> &);
   template <IsStruct T> void readElement(std::ifstream &, T &);
-
-private:
   template <typename T, typename Func, std::size_t... Is>
   void forEachImpl(T &&t, Func fn, std::index_sequence<Is...>);
 
   template <typename... Args, typename Func>
   void forEachInTuple(const std::tuple<Args...> &t, Func fn);
+  void notClass();
 
   void createFile();
   string fileName = "save.dat";

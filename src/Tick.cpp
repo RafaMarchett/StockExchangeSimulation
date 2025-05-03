@@ -13,6 +13,11 @@ size_t Tick::getCurrentTimeMS() const {
 size_t Tick::getCurrentTick() const { return currentTick; }
 void Tick::incrementTick() { currentTick++; }
 
+_Tick::allMembers Tick::getAllMembers() {
+  _Tick::allMembers allMembers;
+  allMembers.currentTick = currentTick;
+  return allMembers;
+}
 void Tick::setAllMembers(_Tick::allMembers inputStruct) {
   currentTick = inputStruct.currentTick;
 }

@@ -58,6 +58,13 @@ void Portifolio::printFullPortifolio() const {
   }
 }
 
+_Portifolio::allMembers Portifolio::getAllMembers() {
+  _Portifolio::allMembers allMembers;
+  allMembers.fullPortifolio.insert(fullPortifolio.begin(),
+                                   fullPortifolio.end());
+  return allMembers;
+}
+
 void Portifolio::setAllMembers(const _Portifolio::allMembers &inputStruct) {
   fullPortifolio.insert(inputStruct.fullPortifolio.begin(),
                         inputStruct.fullPortifolio.end());

@@ -23,6 +23,7 @@ public:
   size_t getCurrentTick() const;
   void incrementTick();
 
+  _Tick::allMembers getAllMembers();
   void setAllMembers(_Tick::allMembers);
 
 private:

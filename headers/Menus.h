@@ -1,7 +1,6 @@
 #pragma once
 #include "Market.h"
 #include "header.hpp"
-#include <functional>
 #ifndef MENUS
 #define MENUS
 class Menus {

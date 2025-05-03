@@ -32,6 +32,7 @@ public:
 
   Stock(float, string, string);
 
+  _Stock::allMembers getAllMembers();
   void setAllMembers(const _Stock::allMembers &);
 
 private:

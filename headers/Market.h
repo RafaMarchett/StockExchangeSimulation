@@ -27,6 +27,7 @@ public:
   void setStockOnScreen(bool);
   bool getStockOnScreen() const;
 
+  _Market::allMembers getAllMembers();
   void setAllMembers(const _Market::allMembers &);
 
 private:

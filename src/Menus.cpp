@@ -1,5 +1,5 @@
 #include "../headers/Menus.h"
-#include <functional>
+#include "../headers/SystemFunctions.h"
 Menus::Menus() {}
 void Menus::changeStockOnScreen(bool newState) {
   Market tempMarket = Market::getMarket();
@@ -8,18 +8,20 @@ void Menus::changeStockOnScreen(bool newState) {
 
 void Menus::firstInitialization() {
   char opt{'/'};
+  SysFuncs SysFuncsManager;
+  cout << clear;
   changeStockOnScreen(false);
   do {
     cout << "\nEnter 1 for English\n"
          << "Insira 2 para Portugues\n>>> " << std::flush;
-    inputIgnore(opt);
+    opt = SysFuncsManager.getSingleKey();
     if (opt == '1' || opt == '2') {
       language = opt;
       break;
     }
-    cout << "\nEnter a valid option\nInsira uma opção válida\n" << std::flush;
+    cout << clear << "\nEnter a valid option\nInsira uma opção válida\n"
+         << std::flush;
   } while (1);
-  homeMenu();
 }
 
 std::function<void()> Menus::homeMenuOptions(char input) {
@@ -28,52 +30,45 @@ std::function<void()> Menus::homeMenuOptions(char input) {
     return allStocksMenu();
     break;
   }
-  case ' ':
-  case '\n':
-  case '\t':
-    break;
 
   default: {
     if (language == '1')
-      cout << "\nInsert a valid option\n";
+      cout << clear << "\nInsert a valid option" << std::endl;
     else if (language == '2')
-      cout << "\nInsira uma opção válida\n";
-    homeMenu();
-    break;
+      cout << clear << "\nInsira uma opção válida" << std::endl;
+    cout << "\nIMP: " << input << std::endl;
   }
   }
-  return nullptr;
+  return homeMenu();
 }
 
 std::function<void()> Menus::homeMenu() {
   changeStockOnScreen(false);
+  SysFuncs SysFuncsManager;
   char tempInput{'/'};
   if (language == '1') {
     cout << "\nEnter '1' to go to the " << bold << "\"Stock Market\" " << noBold
          << "menu\n"
          << ">>> " << std::flush;
 
-    inputIgnore(tempInput);
+    tempInput = SysFuncsManager.getSingleKey();
     return homeMenuOptions(tempInput);
   } else if (language == '2') {
     cout << "\nInsira '1' para ir ao menu" << bold << " \"Mercado de Ações\"\n"
          << noBold << ">>> " << std::flush;
-    inputIgnore(tempInput);
+    tempInput = SysFuncsManager.getSingleKey();
     return homeMenuOptions(tempInput);
   } else
     exit(2);
-  return nullptr;
+  return homeMenu;
 }
+
 std::function<void()> Menus::allStocksMenu() {
+  cout << clear;
   shared_ptr<Market> tempMarket = std::make_shared<Market>(Market::getMarket());
   changeStockOnScreen(1);
-  if (language == '1') {
-    cout << bold << "\n### STOCK MARKET ###" << noBold;
-  } else if (language == '2') {
-    cout << bold << "\n### MERCADO DE AÇÕES ### " << noBold;
-  }
-
   cout << std::endl;
+
   std::function<void()> returnMenu = [tempMarket]() {
     tempMarket->printAllStocks();
   };

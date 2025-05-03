@@ -8,11 +8,17 @@ struct stockData {
   size_t totalStocks{0};
   float averagePrice{0.0f};
   float totalParticipation{0.0f};
+
+  auto toTuple() {
+    return std::tie(totalStocks, averagePrice, totalParticipation);
+  }
 };
 namespace _Portifolio {
 struct allMembers {
 
   std::unordered_map<string, stockData> fullPortifolio;
+
+  auto toTuple() { return std::tie(fullPortifolio); }
 };
 } // namespace _Portifolio
 
@@ -23,6 +29,7 @@ public:
   void sellStock(const sharedStock &, const size_t &);
   static Portifolio &getPortifolio();
 
+  _Portifolio::allMembers getAllMembers();
   void setAllMembers(const _Portifolio::allMembers &);
 
 private:

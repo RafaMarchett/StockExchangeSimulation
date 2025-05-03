@@ -61,28 +61,29 @@ void Saver::saveElement(std::ofstream &File,
   }
 }
 
-template <typename T> void Saver::saveClass(T &allMembers) {
+template <typename T> void Saver::saveClass(T &inputClass) {
   if (std::is_class_v<T>) {
     auto File = saveFile();
     if (!File) {
       cout << "Error in saveClass() File, file not found";
       exit(ERROR_FILE);
     }
+    auto allMembers = inputClass.getAllMembers();
     saveElement(File, allMembers);
 
   } else {
     notClass();
   }
 }
-template <typename T> void Saver::readClass(T &allMembers) {
+template <typename T> void Saver::readClass(T &inputClass) {
   if (std::is_class_v<T>) {
     auto File = readFile();
     if (!File) {
       cout << "Error in readClass() File, file not found";
       exit(ERROR_FILE);
     }
-    auto allMembersTuple = allMembers.toTuple();
-    saveElement(File, allMembers);
+    auto allMembers = inputClass.getAllMembers();
+    readElement(File, allMembers);
   } else {
     notClass();
   }
@@ -94,9 +95,10 @@ void Saver::saveElement(std::ofstream &File, T &inputStruct) {
                  [&](auto &it) { saveElement(File, it); });
 }
 
-template <IsStruct T> void readElement(std::ifstream &File, T &inputStruct) {
-  auto inputTuple = inputStruct.toTuple();
-  forEachInTuple(inputTuple, [&](auto &it) { readElement(File, it); });
+template <IsStruct T>
+void Saver::readElement(std::ifstream &File, T &inputStruct) {
+  forEachInTuple(inputStruct.toTuple(),
+                 [&](auto &it) { readElement(File, it); });
 }
 
 template <typename... Args> void Saver::saveAllClasses(Args &&...args) {
@@ -104,4 +106,32 @@ template <typename... Args> void Saver::saveAllClasses(Args &&...args) {
 }
 template <typename... Args> void Saver::readAllClasses(Args &&...args) {
   ((readClass(std::forward<Args>(args)), ...));
+}
+
+template <IsStruct T>
+void Saver::saveElement(std::ofstream &File, shared_ptr<T> &inputClass) {
+  if (std::is_class_v<T>) {
+    if (!File) {
+      cout << "Error in saveClass() File, file not found";
+      exit(ERROR_FILE);
+    }
+    auto allMembers = inputClass->getAllMembers();
+    saveElement(File, allMembers);
+
+  } else {
+    notClass();
+  }
+}
+template <IsStruct T>
+void Saver::readElement(std::ifstream &File, shared_ptr<T> &inputClass) {
+  if (std::is_class_v<T>) {
+    if (!File) {
+      cout << "Error in readClass() File, file not found";
+      exit(ERROR_FILE);
+    }
+    auto allMembers = inputClass->getAllMembers();
+    readElement(File, allMembers);
+  } else {
+    notClass();
+  }
 }

@@ -1,5 +1,6 @@
 #include "../headers/Market.h"
 #include "../headers/Stock.h"
+#include "../headers/SystemFunctions.h"
 Market::Market() {
   sharedStock tempStocks[] = {
       make_shared<Stock>(30.42f, "RLS3", "Ralsey's Hat"),
@@ -41,17 +42,26 @@ void Market::updateAllStocksPrice() {
 
 void Market::printAllStocks() {
   // if (stocksOnScreen) {
-  outputPointer_PrintStocks();
+  SysFuncs sysFuncManager;
+  cout << clear;
+  if (language == '1') {
+    cout << bold << "##### STOCK MARKET #####\n\n" << noBold;
+  } else if (language == '2') {
+    cout << bold << "##### MERCADO DE AÇÕES #####\n\n" << noBold;
+  }
 
   for (auto &stock : allStocks) {
     stocksOnScreen = true;
-    if (!stocksOnScreen)
+    if (!stocksOnScreen) {
       return;
+    }
 
     stock.second->printStockInMarket();
     cout << std::endl;
+
     // }
   }
+  sysFuncManager.pressEnterToContinue();
 }
 void Market::addNewStock(sharedStock &newStock) {
   if (newStock) {
@@ -60,6 +70,13 @@ void Market::addNewStock(sharedStock &newStock) {
   }
 }
 
+_Market::allMembers Market::getAllMembers() {
+  _Market::allMembers allMembers;
+  allMembers._numberOfStocks = _numberOfStocks;
+  allMembers.stocksOnScreen = stocksOnScreen;
+  allMembers.allStocks = allStocks;
+  return allMembers;
+}
 void Market::setAllMembers(const _Market::allMembers &inputStruct) {
   stocksOnScreen = inputStruct.stocksOnScreen;
   _numberOfStocks = inputStruct._numberOfStocks;

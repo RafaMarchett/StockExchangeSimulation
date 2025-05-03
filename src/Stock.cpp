@@ -40,6 +40,15 @@ void Stock::printStockInMarket() {
        << " | " << setw(7) << getPrice() << " | " << getArrow();
 }
 
+
+_Stock::allMembers Stock::getAllMembers(){
+  _Stock::allMembers allMembers;
+  allMembers._price = _price;
+  allMembers._ticker = _ticker;
+  allMembers._companyName = _companyName;
+  allMembers.priceHistory = priceHistory;
+  return allMembers;
+}
 void Stock::setAllMembers(const _Stock::allMembers &inputStruct) {
   _price = inputStruct._price;
   _ticker = inputStruct._ticker;

@@ -1,39 +1,24 @@
+TARGET_DIR = exe
+BUILD_DIR = build
 SRCDIR = src
 
-BUILDDIR = src
+TARGET = $(TARGET_DIR)/out
 
-SRCS = $(SRCDIR)/main.cpp \
-       $(SRCDIR)/Portifolio.cpp \
-       $(SRCDIR)/Stock.cpp \
-       $(SRCDIR)/Market.cpp \
-       $(SRCDIR)/Menus.cpp \
-       $(SRCDIR)/Saver.cpp \
-       $(SRCDIR)/Tick.cpp 
-
-OBJS = $(patsubst $(SRCDIR)/%.cpp, $(BUILDDIR)/%.o, $(SRCS))
-
-TARGET = $(BUILDDIR)/out
+SRCS = $(wildcard $(SRCDIR)/*.cpp)
+OBJS = $(patsubst $(SRCDIR)/%.cpp, $(BUILD_DIR)/%.o, $(SRCS))
 
 CXX = g++
-
 CXXFLAGS = -Wall -g -std=c++23
 
-LDFLAGS =
-
-all: $(TARGET)
-
-$(BUILDDIR):
-	mkdir -p $(BUILDDIR)
-
-$(TARGET): $(OBJS) $(BUILDDIR)
+$(TARGET): $(OBJS)
+	@mkdir -p $(TARGET_DIR)
 	$(CXX) $(OBJS) -o $(TARGET) $(LDFLAGS)
 
-$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp $(BUILDDIR)
+$(BUILD_DIR)/%.o: $(SRCDIR)/%.cpp
+	@mkdir -p $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJS) $(TARGET)
-	# Se você quiser remover o diretório src inteiro na limpeza (cuidado!), descomente a linha abaixo
-	# rm -rf $(BUILDDIR)
+	rm -f $(BUILD_DIR)/*.o $(TARGET)
 
-.PHONY: all clean $(BUILDDIR)
+.PHONY: clean

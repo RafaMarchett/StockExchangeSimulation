@@ -9,6 +9,12 @@
 #define TST 0
 #define SAV 1
 #define READ 1
+
+Tick *mainTick = nullptr;
+Portifolio *mainPortifolio = nullptr;
+Market *mainMarket = nullptr;
+std::function<void()> currentMenu = nullptr;
+
 void firstInitialization(Market *&marketInstance, Tick *&tickInstance,
                          Portifolio *&portifolioInstance) {
   configureFloat();
@@ -24,23 +30,9 @@ void loadInitialization(Market *&marketInstance, Tick *&tickInstance,
   Portifolio portifolioInstance2 = *portifolioInstance;
   Saver::readAllClasses(marketInstance2, tickInstance2, portifolioInstance2);
 }
+void mainLoop() {
 
-int main(int agrc, char *argv[]) {
-#if TST
-#else
-  Tick *mainTick = nullptr;
-  Portifolio *mainPortifolio = nullptr;
-  Market *mainMarket = nullptr;
-
-  std::fstream File(fileName, std::ios::in | std::ios::ate);
-  if (!File || File.tellg() == 0)
-    firstInitialization(mainMarket, mainTick,
-                        mainPortifolio); // New firstInitialization
-  else
-    loadInitialization(mainMarket, mainTick,
-                       mainPortifolio); // Load File
   size_t lastTickMS = mainTick->getCurrentTimeMS();
-  std::function<void()> currentMenu = Menus::homeMenu();
 
   while (1) {
     size_t currentTimeMS = mainTick->getCurrentTimeMS();
@@ -61,6 +53,23 @@ int main(int agrc, char *argv[]) {
         (lastTickMS + mainTick->getTickIntervalMS()) - currentTimeMS;
     sleep(milliseconds(timeToNextTickMS));
   }
+}
+
+int main(int agrc, char *argv[]) {
+#if TST
+#else
+
+  std::fstream File(fileName, std::ios::in | std::ios::ate);
+  if (!File || File.tellg() == 0)
+    firstInitialization(mainMarket, mainTick,
+                        mainPortifolio); // New firstInitialization
+  else
+    loadInitialization(mainMarket, mainTick,
+                       mainPortifolio); // Load File
+  std::function<void()> currentMenu = Menus::homeMenu();
+  std::thread threadLoop(mainLoop);
+
+  threadLoop.join();
 #endif
   return 0;
 }

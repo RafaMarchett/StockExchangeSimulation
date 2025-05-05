@@ -1,5 +1,7 @@
 #include "../headers/Menus.h"
+#include "../headers/Market.h"
 #include "../headers/SystemFunctions.h"
+std::atomic<bool> isLoop{false};
 Menus::Menus() {}
 void Menus::changeStockOnScreen(bool newState) {
   Market tempMarket = Market::getMarket();
@@ -24,10 +26,10 @@ void Menus::firstInitialization() {
   } while (1);
 }
 
-std::function<void()> Menus::homeMenuOptions(char input) {
+void Menus::homeMenuOptions(char input) {
   switch (input) {
   case '1': {
-    return allStocksMenu();
+    allStocksMenu();
     break;
   }
 
@@ -39,38 +41,46 @@ std::function<void()> Menus::homeMenuOptions(char input) {
     cout << "\nIMP: " << input << std::endl;
   }
   }
-  return homeMenu();
+  homeMenu();
 }
 
-std::function<void()> Menus::homeMenu() {
+void Menus::homeMenu() {
   changeStockOnScreen(false);
   SysFuncs SysFuncsManager;
   char tempInput{'/'};
   if (language == '1') {
-    cout << "\nEnter '1' to go to the " << bold << "\"Stock Market\" " << noBold
-         << "menu\n"
+    cout << clear << "\nEnter '1' to go to the " << bold << "\"Stock Market\" "
+         << noBold << "menu\n"
          << ">>> " << std::flush;
 
     tempInput = SysFuncsManager.getSingleKey();
-    return homeMenuOptions(tempInput);
+    homeMenuOptions(tempInput);
   } else if (language == '2') {
-    cout << "\nInsira '1' para ir ao menu" << bold << " \"Mercado de Ações\"\n"
+    cout << clear << "\nInsira '1' para ir ao menu" << bold
+         << " \"Mercado de Ações\"\n"
          << noBold << ">>> " << std::flush;
     tempInput = SysFuncsManager.getSingleKey();
-    return homeMenuOptions(tempInput);
+    homeMenuOptions(tempInput);
   } else
     exit(2);
-  return homeMenu;
 }
 
-std::function<void()> Menus::allStocksMenu() {
+void Menus::allStocksMenu() {
   cout << clear;
   shared_ptr<Market> tempMarket = std::make_shared<Market>(Market::getMarket());
-  changeStockOnScreen(1);
+  changeStockOnScreen(true);
   cout << std::endl;
-
-  std::function<void()> returnMenu = [tempMarket]() {
+  isLoop = true;
+  std::jthread receiveEnter(inputToLoop);
+  while (isLoop) {
     tempMarket->printAllStocks();
-  };
-  return returnMenu;
+    printPressEnter();
+    sleep(milliseconds(100));
+  }
+}
+
+void Menus::inputToLoop() {
+  SysFuncs funcsManager;
+  funcsManager.pressEnterToContinue();
+  isLoop = false;
 }

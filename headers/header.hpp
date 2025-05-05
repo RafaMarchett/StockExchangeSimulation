@@ -44,6 +44,15 @@ template <typename T> inline static void inputIgnore(T &input) {
 
 inline char language;
 
+inline void printPressEnter() {
+  if (language == '1') {
+    cout << "Press 'Enter' to continue... ";
+  } else {
+    cout << "Pressione 'Enter' para continuar... ";
+  }
+  cout << std::flush;
+}
+
 template <typename ABC>
 concept IsStruct = std::is_class_v<ABC>;
 

@@ -14,10 +14,8 @@ void Saver::forEachInTuple(const std::tuple<Args...> &t, Func fn) {
 template <typename T>
 void Saver::saveElement(std::ofstream &File, vector<T> &inputVector) {
   size_t size = inputVector.size();
-  for (auto &it : inputVector) {
-    saveElement(File, size);
-    File.write(reinterpret_cast<char *>(inputVector.data()), size * sizeof(T));
-  }
+  saveElement(File, size);
+  File.write(reinterpret_cast<char *>(inputVector.data()), size * sizeof(T));
 }
 
 template <typename T> void Saver::saveElement(std::ofstream &File, T &input) {
@@ -27,10 +25,8 @@ template <typename T> void Saver::saveElement(std::ofstream &File, T &input) {
 template <typename T>
 void Saver::readElement(std::ifstream &File, vector<T> &inputVector) {
   size_t size = inputVector.size();
-  for (auto &it : inputVector) {
-    readElement(File, size);
-    File.read(reinterpret_cast<char *>(inputVector.data()), size * sizeof(T));
-  }
+  readElement(File, size);
+  File.read(reinterpret_cast<char *>(inputVector.data()), size * sizeof(T));
 }
 template <typename T> void Saver::readElement(std::ifstream &File, T &input) {
   File.read(reinterpret_cast<char *>(&input), sizeof(input));

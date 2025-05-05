@@ -1,4 +1,3 @@
-
 #include "../headers/Market.h"
 #include "../headers/Menus.h"
 #include "../headers/Portifolio.h"
@@ -13,7 +12,6 @@
 Tick *mainTick = nullptr;
 Portifolio *mainPortifolio = nullptr;
 Market *mainMarket = nullptr;
-std::function<void()> currentMenu = nullptr;
 
 void firstInitialization(Market *&marketInstance, Tick *&tickInstance,
                          Portifolio *&portifolioInstance) {
@@ -31,7 +29,6 @@ void loadInitialization(Market *&marketInstance, Tick *&tickInstance,
   Saver::readAllClasses(marketInstance2, tickInstance2, portifolioInstance2);
 }
 void mainLoop() {
-
   size_t lastTickMS = mainTick->getCurrentTimeMS();
 
   while (1) {
@@ -42,10 +39,8 @@ void mainLoop() {
       // TICK LOGIC
       if (mainTick->getCurrentTick() % 10 == 0) {
         mainMarket->updateAllStocksPrice();
-        currentMenu();
       }
 
-      mainMarket->printAllStocks();
       mainTick->incrementTick();
       lastTickMS = currentTimeMS;
     }
@@ -66,10 +61,10 @@ int main(int agrc, char *argv[]) {
   else
     loadInitialization(mainMarket, mainTick,
                        mainPortifolio); // Load File
-  std::function<void()> currentMenu = Menus::homeMenu();
-  std::thread threadLoop(mainLoop);
-
-  threadLoop.join();
+  // std::thread threadLoop(mainLoop);
+  std::jthread currentMenu(Menus::homeMenu);
+  mainLoop();
+  // threadLoop.join();
 #endif
   return 0;
 }

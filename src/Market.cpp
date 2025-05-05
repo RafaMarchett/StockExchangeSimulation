@@ -1,4 +1,5 @@
 #include "../headers/Market.h"
+#include "../headers/Menus.h"
 #include "../headers/Stock.h"
 #include "../headers/SystemFunctions.h"
 Market::Market() {
@@ -40,29 +41,6 @@ void Market::updateAllStocksPrice() {
   }
 }
 
-void Market::printAllStocks() {
-  // if (stocksOnScreen) {
-  SysFuncs sysFuncManager;
-  cout << clear;
-  if (language == '1') {
-    cout << bold << "##### STOCK MARKET #####\n\n" << noBold;
-  } else if (language == '2') {
-    cout << bold << "##### MERCADO DE AÇÕES #####\n\n" << noBold;
-  }
-
-  for (auto &stock : allStocks) {
-    stocksOnScreen = true;
-    if (!stocksOnScreen) {
-      return;
-    }
-
-    stock.second->printStockInMarket();
-    cout << std::endl;
-
-    // }
-  }
-  sysFuncManager.pressEnterToContinue();
-}
 void Market::addNewStock(sharedStock &newStock) {
   if (newStock) {
     allStocks.emplace(newStock->getTicker(), std::move(newStock));

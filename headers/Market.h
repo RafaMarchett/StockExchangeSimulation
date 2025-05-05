@@ -22,7 +22,7 @@ public:
   void addNewStock(sharedStock &);
   static Market &getMarket();
   void updateAllStocksPrice();
-  void printAllStocks();
+  inline void printAllStocks();
   size_t getNumberOfStocks();
   void setStockOnScreen(bool);
   bool getStockOnScreen() const;
@@ -38,4 +38,23 @@ private:
   std::unordered_map<string, sharedStock> allStocks;
 };
 
+#include "Stock.h"
+void Market::printAllStocks() {
+  cout << clear;
+  if (language == '1') {
+    cout << bold << "##### STOCK MARKET #####\n\n" << noBold;
+  } else if (language == '2') {
+    cout << bold << "##### MERCADO DE AÇÕES #####\n\n" << noBold;
+  }
+
+  for (auto &stock : allStocks) {
+    stocksOnScreen = true;
+    if (!stocksOnScreen) {
+      return;
+    }
+
+    stock.second->printStockInMarket();
+    cout << std::endl;
+  }
+}
 #endif // MARKET

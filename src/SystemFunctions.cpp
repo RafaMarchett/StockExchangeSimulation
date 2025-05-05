@@ -45,17 +45,13 @@ bool original_termios_saved = false;
 #endif // _WIN32
 
 void SysFuncs::pressEnterToContinue() {
-  if (language == '1') {
-    cout << "Press 'Enter' to continue... ";
-  } else {
-    cout << "Pressione 'Enter' para continuar... ";
-  }
+  printPressEnter();
   string dummy;
 #ifdef _WIN32
   char c{'/'};
   do {
     c = _getch();
-  } while (c != '\r ' && c != '\n');
+  } while (c != '\r' && c != '\n');
 }
 #else
   set_terminal_no_echo_mode();

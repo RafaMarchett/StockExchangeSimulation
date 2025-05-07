@@ -60,3 +60,10 @@ void Market::setAllMembers(const _Market::allMembers &inputStruct) {
   _numberOfStocks = inputStruct._numberOfStocks;
   allStocks = inputStruct.allStocks;
 }
+
+sharedStock Market::findTicker(const string &inputString) {
+  if (allStocks.find(inputString) != allStocks.end())
+    return allStocks.find(inputString)->second;
+  else
+    return nullptr;
+}

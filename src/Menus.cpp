@@ -1,7 +1,7 @@
 #include "../headers/Menus.h"
 #include "../headers/Market.h"
+#include "../headers/Portifolio.h"
 #include "../headers/SystemFunctions.h"
-std::atomic<bool> isLoop{false};
 Menus::Menus() {}
 void Menus::changeStockOnScreen(bool newState) {
   Market tempMarket = Market::getMarket();
@@ -32,13 +32,17 @@ void Menus::homeMenuOptions(char input) {
     allStocksMenu();
     break;
   }
+  case '2': {
+    specificStock();
+    break;
+  }
+  case '3': {
+    fullPortifolioMenu();
+    break;
+  }
 
   default: {
-    if (language == '1')
-      cout << clear << "\nInsert a valid option" << std::endl;
-    else if (language == '2')
-      cout << clear << "\nInsira uma opção válida" << std::endl;
-    cout << "\nIMP: " << input << std::endl;
+    printInLanguage("\nInsert a valid option\n", "\nInsira uma opção válida\n");
   }
   }
   homeMenu();
@@ -48,21 +52,20 @@ void Menus::homeMenu() {
   changeStockOnScreen(false);
   SysFuncs SysFuncsManager;
   char tempInput{'/'};
-  if (language == '1') {
-    cout << clear << "\nEnter '1' to go to the " << bold << "\"Stock Market\" "
-         << noBold << "menu\n"
-         << ">>> " << std::flush;
+  cout << clear;
+  printInLanguage(
+      "\nEnter '1' to go to the \"Stock Market\" menu\nEnter '2' to go to the "
+      "\"Single Stock\" menu\nEnter '3' to go to the \"Full Portifolio\" "
+      "menu\n",
+      "\nInsira '1' para ir ao menu \"Mercado de Ações\"\nInsira '2' para ir "
+      "ao menu \"Ação única\"\nInsira '3' para ir ao menu \"Portifolio "
+      "Completo\"\n");
 
-    tempInput = SysFuncsManager.getSingleKey();
-    homeMenuOptions(tempInput);
-  } else if (language == '2') {
-    cout << clear << "\nInsira '1' para ir ao menu" << bold
-         << " \"Mercado de Ações\"\n"
-         << noBold << ">>> " << std::flush;
-    tempInput = SysFuncsManager.getSingleKey();
-    homeMenuOptions(tempInput);
-  } else
-    exit(2);
+  tempInput = SysFuncsManager.getSingleKey();
+  homeMenuOptions(tempInput);
+  cout << ">>> " << std::flush;
+  tempInput = SysFuncsManager.getSingleKey();
+  homeMenuOptions(tempInput);
 }
 
 void Menus::allStocksMenu() {
@@ -83,4 +86,43 @@ void Menus::inputToLoop() {
   SysFuncs funcsManager;
   funcsManager.pressEnterToContinue();
   isLoop = false;
+}
+
+void Menus::specificStock() {
+  string inputTicker;
+  auto mkt = Market::getMarket();
+  sharedStock stock = nullptr;
+  printInLanguage("Enter a stock ticker\n>>> ",
+                  "Insira o ticker de uma ação\n>>> ");
+  cin >> inputTicker;
+  stock = mkt.findTicker(inputTicker);
+  char opt{'/'};
+  // std::jthread receiveChar(enterSingleChar, std::ref(opt));
+  isLoop = true;
+  if (stock) {
+    // print stock e adicionar funcionalidades de compra/venda
+    while (isLoop) {
+      specificStockLoop(stock, opt);
+      sleep(milliseconds(100));
+    }
+  } else {
+    cout << clear;
+    printInLanguage("Non-existent stock ticker\n",
+                    "Ticker de ação inexistente\n");
+    specificStock();
+  }
+}
+
+void Menus::fullPortifolioMenu() {
+  SysFuncs funcsManager;
+  Portifolio portifolioInstance = Portifolio::getPortifolio();
+  portifolioInstance.printFullPortifolio();
+  funcsManager.pressEnterToContinue();
+}
+
+void Menus::enterSingleChar(char &input) {
+  SysFuncs funcsManager;
+  char temp = funcsManager.getSingleKey();
+  isLoop = false;
+  input = temp;
 }

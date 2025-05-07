@@ -2,14 +2,14 @@
 #include "../headers/Market.h"
 
 string Stock::getTicker() const { return _ticker; }
-float Stock::getPrice() const { return _price; }
-void Stock::setPrice(float price) {
+double Stock::getPrice() const { return _price; }
+void Stock::setPrice(double price) {
   _price = price;
   priceHistory.insert(priceHistory.end(), price);
 }
 string Stock::getArrow() {
-  size_t&& Size = priceHistory.size();
-  size_t&& lastElement{Size-1},secondlastElement{Size-2};
+  size_t &&Size = priceHistory.size();
+  size_t &&lastElement{Size - 1}, secondlastElement{Size - 2};
   if (Size >= 2) {
     if (priceHistory.at(lastElement) >= priceHistory.at(secondlastElement)) {
       return upArrow;
@@ -21,13 +21,13 @@ string Stock::getArrow() {
 }
 string Stock::getCompanyName() const { return _companyName; }
 
-Stock::Stock(float price, string ticker, string companyName)
+Stock::Stock(double price, string ticker, string companyName)
     : _price(price), _ticker(ticker), _companyName(companyName) {}
 
 void Stock::randomPriceUpdate() {
   srand(std::chrono::high_resolution_clock::now().time_since_epoch().count());
-  float highOrDrop = (rand() % 2 == 0 ? -0.89 : 1.0);
-  float randNumber = ((rand() % 8) + 1);
+  double highOrDrop = (rand() % 2 == 0 ? -0.89 : 1.0);
+  double randNumber = ((rand() % 8) + 1);
 
   randNumber *= highOrDrop;
   randNumber += 100;
@@ -40,8 +40,7 @@ void Stock::printStockInMarket() {
        << " | " << setw(7) << getPrice() << " | " << getArrow();
 }
 
-
-_Stock::allMembers Stock::getAllMembers(){
+_Stock::allMembers Stock::getAllMembers() {
   _Stock::allMembers allMembers;
   allMembers._price = _price;
   allMembers._ticker = _ticker;

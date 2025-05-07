@@ -19,6 +19,8 @@
 
 using std::ostream, std::cout, std::cin, std::string, std::shared_ptr,
     std::shared_ptr, std::make_shared, std::vector, std::setw;
+#define LANGUAGE_NOT_FIND 2
+inline char language;
 
 const string upArrow{"\033[32m▲\033[37m"}, downArrow{"\033[31m▼\033[37m"};
 
@@ -33,7 +35,7 @@ inline static void maxCinIgnore() {
   cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
-inline static void configureFloat() {
+inline static void configureDouble() {
   cout << std::fixed << std::setprecision(2);
 }
 
@@ -42,18 +44,22 @@ template <typename T> inline static void inputIgnore(T &input) {
   cin.ignore(10000, '\n');
 }
 
-inline char language;
+inline void printInLanguage(const string &string1, const string &string2) {
+  if (language == '1') {
+    cout << string1;
+  } else if (language == '2') {
+    cout << string2;
+  } else
+    exit(LANGUAGE_NOT_FIND);
+  cout << std::flush;
+}
 
 inline void printPressEnter() {
-  if (language == '1') {
-    cout << "Press 'Enter' to continue... ";
-  } else {
-    cout << "Pressione 'Enter' para continuar... ";
-  }
-  cout << std::flush;
+  printInLanguage("Press 'Enter' to continue... ",
+                  "Pressione 'Enter' para continuar... ");
 }
 
 template <typename ABC>
 concept IsStruct = std::is_class_v<ABC>;
 
-#endif
+#endif // HEADER_HPP

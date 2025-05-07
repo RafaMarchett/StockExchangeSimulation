@@ -26,6 +26,7 @@ public:
   size_t getNumberOfStocks();
   void setStockOnScreen(bool);
   bool getStockOnScreen() const;
+  sharedStock findTicker(const string &);
 
   _Market::allMembers getAllMembers();
   void setAllMembers(const _Market::allMembers &);
@@ -41,11 +42,8 @@ private:
 #include "Stock.h"
 void Market::printAllStocks() {
   cout << clear;
-  if (language == '1') {
-    cout << bold << "##### STOCK MARKET #####\n\n" << noBold;
-  } else if (language == '2') {
-    cout << bold << "##### MERCADO DE AÇÕES #####\n\n" << noBold;
-  }
+  printInLanguage("##### STOCK MARKET #####\n\n",
+                  "##### MERCADO DE AÇÕES #####\n\n");
 
   for (auto &stock : allStocks) {
     stocksOnScreen = true;

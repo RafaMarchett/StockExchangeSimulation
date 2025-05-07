@@ -5,8 +5,9 @@ Portifolio &Portifolio::getPortifolio() {
   return portifolio;
 }
 
-float Portifolio::calculateAveragePrice(const sharedStock &buyedStock,
-                                        float buyedPrice, int buyedQuantity) {
+double Portifolio::get_MoneyInAccount() const { return _moneyInAccount; }
+double Portifolio::calculateAveragePrice(const sharedStock &buyedStock,
+                                         double buyedPrice, int buyedQuantity) {
   auto currentStockSecond =
       fullPortifolio.find(buyedStock->getTicker())->second;
   return (currentStockSecond.averagePrice * currentStockSecond.totalStocks +
@@ -25,14 +26,21 @@ void Portifolio::calculateTotalParticipation(const sharedStock &stock) {
 void Portifolio::buyStock(const sharedStock &buyedStock,
                           const size_t &stockCount) {
   if (buyedStock && stockCount > 0) {
+    double buyedPrice = stockCount * buyedStock->getPrice();
+    if (!(_moneyInAccount >= buyedPrice)) {
+      printInLanguage("You don't have enough money in the account\n",
+                      "Você não tem dinheiro suficiente na conta\n");
+      return;
+    }
+
     if (fullPortifolio.find(buyedStock->getTicker()) != fullPortifolio.end()) {
       auto stockInPortifolio = fullPortifolio.find(buyedStock->getTicker());
       stockInPortifolio->second.averagePrice =
-          calculateAveragePrice(buyedStock, buyedStock->getPrice(), stockCount);
+          calculateAveragePrice(buyedStock, buyedPrice, stockCount);
       stockInPortifolio->second.totalStocks += stockCount;
     } else {
       fullPortifolio.insert(
-          {buyedStock->getTicker(), {stockCount, buyedStock->getPrice()}});
+          {buyedStock->getTicker(), {stockCount, buyedPrice}});
     }
     calculateTotalParticipation(buyedStock);
   }
@@ -45,16 +53,28 @@ void Portifolio::sellStock(const sharedStock &selledStock,
   if (totalStocksInPortifolio >= stockCounter && selledStock) {
     totalStocksInPortifolio -= stockCounter;
     calculateTotalParticipation(selledStock);
+    _moneyInAccount += selledStock->getPrice() * stockCounter;
   } else {
-    cout << "Você não possuí ações suficientes para vender\n";
+    printInLanguage("You don't have enough stocks to sell",
+                    "Você não possuí ações suficientes para vender\n");
   }
 }
 void Portifolio::printFullPortifolio() const {
+  cout << clear;
   for (auto &stock : fullPortifolio) {
-    cout << bold << stock.first << noBold
-         << " Preço médio: " << stock.second.averagePrice
-         << " Quantidade: " << stock.second.totalStocks << bold
-         << "   TOTAL: " << stock.second.totalParticipation << noBold << '\n';
+    if (language == '1') {
+      cout << bold << stock.first << noBold
+           << " Average Price: " << stock.second.averagePrice
+           << " Stock Quantity: " << stock.second.totalStocks << "  TOTAL "
+           << stock.second.totalParticipation << std::endl;
+    } else if (language == '2') {
+      cout << bold << stock.first << noBold
+           << " Preço médio: " << stock.second.averagePrice
+           << " Quantidade: " << stock.second.totalStocks << bold
+           << "   TOTAL: " << stock.second.totalParticipation << noBold
+           << std::endl;
+    } else
+      exit(2);
   }
 }
 
@@ -62,10 +82,12 @@ _Portifolio::allMembers Portifolio::getAllMembers() {
   _Portifolio::allMembers allMembers;
   allMembers.fullPortifolio.insert(fullPortifolio.begin(),
                                    fullPortifolio.end());
+  allMembers._moneyInAccount = _moneyInAccount;
   return allMembers;
 }
 
 void Portifolio::setAllMembers(const _Portifolio::allMembers &inputStruct) {
   fullPortifolio.insert(inputStruct.fullPortifolio.begin(),
                         inputStruct.fullPortifolio.end());
+  _moneyInAccount = inputStruct._moneyInAccount;
 }

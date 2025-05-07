@@ -9,9 +9,9 @@ using sharedStock = std::shared_ptr<Stock>;
 
 namespace _Stock {
 struct allMembers {
-  float _price{0.0f};
+  double _price{0.0f};
   string _ticker, _companyName;
-  vector<float> priceHistory;
+  vector<double> priceHistory;
 
   auto toTuple() {
     return std::tie(_price, _ticker, _companyName, priceHistory);
@@ -23,22 +23,22 @@ class Stock {
 public:
   friend class Market;
   string getTicker() const;
-  float getPrice() const;
-  void setPrice(float);
+  double getPrice() const;
+  void setPrice(double);
   string getCompanyName() const;
   void randomPriceUpdate();
   void printStockInMarket();
   string getArrow();
 
-  Stock(float, string, string);
+  Stock(double, string, string);
 
   _Stock::allMembers getAllMembers();
   void setAllMembers(const _Stock::allMembers &);
 
 private:
-  float _price{0.0f};
+  double _price{0.0f};
   string _ticker, _companyName;
-  vector<float> priceHistory;
+  vector<double> priceHistory;
 };
 
 #endif // STOCK

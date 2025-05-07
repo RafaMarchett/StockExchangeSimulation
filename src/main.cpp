@@ -15,7 +15,7 @@ Market *mainMarket = nullptr;
 
 void firstInitialization(Market *&marketInstance, Tick *&tickInstance,
                          Portifolio *&portifolioInstance) {
-  configureFloat();
+  configureDouble();
   marketInstance = &Market::getMarket();
   tickInstance = &Tick::getInstance();
   portifolioInstance = &Portifolio::getPortifolio();

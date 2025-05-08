@@ -2,12 +2,8 @@
 #include "../headers/Menus.h"
 #include "../headers/Portifolio.h"
 #include "../headers/Saver.h"
-#include "../headers/SystemFunctions.h"
 #include "../headers/Tick.h"
 #include "../headers/header.hpp"
-#define TST 0
-#define SAV 1
-#define READ 1
 
 Tick *mainTick = nullptr;
 Portifolio *mainPortifolio = nullptr;
@@ -17,9 +13,22 @@ void firstInitialization(Market *&marketInstance, Tick *&tickInstance,
                          Portifolio *&portifolioInstance) {
   configureDouble();
   marketInstance = &Market::getMarket();
+  vector<sharedStock> tempStocks = {
+      make_shared<Stock>(30.42f, "RLS3", "Ralsey's Hat"),
+      make_shared<Stock>(100.31f, "MEG3", "Major Explorer Group"),
+      make_shared<Stock>(25.10f, "GLOB3", "GlobalTech Solutions"),
+      make_shared<Stock>(75.50f, "AFS3", "Apex Financial Services"),
+      make_shared<Stock>(75.3, "BNTG3", "Backrooms Nonaligned Trade Group"),
+      make_shared<Stock>(30.0f, "STRP3", "Stroustrup's Code"),
+      make_shared<Stock>(210.0f, "CHJK3", "Chicken Jockey"),
+      make_shared<Stock>(11.80f, "DATA3", "SecureData Solutions"),
+      make_shared<Stock>(50.23, "PRIT3", "PrinTech Art 3D"),
+      make_shared<Stock>(124.24, "MYS3", "Mysticy Backrooms")};
+  marketInstance->startMarket(tempStocks);
   tickInstance = &Tick::getInstance();
   portifolioInstance = &Portifolio::getPortifolio();
   Menus::firstInitialization();
+  portifolioInstance->add_moneyInAccount(1500.0);
 }
 void loadInitialization(Market *&marketInstance, Tick *&tickInstance,
                         Portifolio *&portifolioInstance) {
@@ -51,8 +60,6 @@ void mainLoop() {
 }
 
 int main(int agrc, char *argv[]) {
-#if TST
-#else
 
   std::fstream File(fileName, std::ios::in | std::ios::ate);
   if (!File || File.tellg() == 0)
@@ -61,10 +68,7 @@ int main(int agrc, char *argv[]) {
   else
     loadInitialization(mainMarket, mainTick,
                        mainPortifolio); // Load File
-  // std::thread threadLoop(mainLoop);
   std::jthread currentMenu(Menus::homeMenu);
   mainLoop();
-  // threadLoop.join();
-#endif
   return 0;
 }

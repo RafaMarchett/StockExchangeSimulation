@@ -1,5 +1,4 @@
 #pragma once
-#include "Tick.h"
 #include "header.hpp"
 #ifndef STOCK
 #define STOCK

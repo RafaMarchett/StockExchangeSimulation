@@ -2,9 +2,11 @@
 #include "../headers/Market.h"
 #include "../headers/Portifolio.h"
 #include "../headers/SystemFunctions.h"
+#include "../headers/Tick.h"
+inline std::atomic<bool> isLoop{false};
 Menus::Menus() {}
 void Menus::changeStockOnScreen(bool newState) {
-  Market tempMarket = Market::getMarket();
+  Market &tempMarket = Market::getMarket();
   tempMarket.setStockOnScreen(newState);
 }
 
@@ -54,10 +56,10 @@ void Menus::homeMenu() {
   char tempInput{'/'};
   cout << clear;
   printInLanguage(
-      "\nEnter '1' to go to the \"Stock Market\" menu\nEnter '2' to go to the "
+      "Enter '1' to go to the \"Stock Market\" menu\nEnter '2' to go to the "
       "\"Single Stock\" menu\nEnter '3' to go to the \"Full Portifolio\" "
       "menu\n",
-      "\nInsira '1' para ir ao menu \"Mercado de Ações\"\nInsira '2' para ir "
+      "Insira '1' para ir ao menu \"Mercado de Ações\"\nInsira '2' para ir "
       "ao menu \"Ação única\"\nInsira '3' para ir ao menu \"Portifolio "
       "Completo\"\n");
 
@@ -70,7 +72,7 @@ void Menus::homeMenu() {
 
 void Menus::allStocksMenu() {
   cout << clear;
-  shared_ptr<Market> tempMarket = std::make_shared<Market>(Market::getMarket());
+  shared_ptr<Market> tempMarket(&Market::getMarket(), [](Market *) {});
   changeStockOnScreen(true);
   cout << std::endl;
   isLoop = true;
@@ -90,21 +92,37 @@ void Menus::inputToLoop() {
 
 void Menus::specificStock() {
   string inputTicker;
-  auto mkt = Market::getMarket();
+  auto &mkt = Market::getMarket();
   sharedStock stock = nullptr;
-  printInLanguage("Enter a stock ticker\n>>> ",
-                  "Insira o ticker de uma ação\n>>> ");
+  cout << clear;
+  printInLanguage(
+      "Enter a stock ticker, or type \"exit\" to exit\n>>> ",
+      "Insira o ticker de uma ação ou digite \"exit\" para sair\n>>> ");
   cin >> inputTicker;
+  if (inputTicker == "exit")
+    return;
   stock = mkt.findTicker(inputTicker);
   char opt{'/'};
-  // std::jthread receiveChar(enterSingleChar, std::ref(opt));
   isLoop = true;
   if (stock) {
-    // print stock e adicionar funcionalidades de compra/venda
-    while (isLoop) {
-      specificStockLoop(stock, opt);
-      sleep(milliseconds(100));
-    }
+    bool x = true;
+    std::thread loopPrints([&]() {
+      while (x) {
+        cout << clear;
+        stock->printStockInMarket();
+        printInLanguage(
+            "\nEnter '1' to buy the Stock\nEnter '2' to sell the "
+            "Stock\nPress 'enter' to exit\n>>> ",
+            "\nInsira '1' para comprar a ação\nInsira '2' para vender a "
+            "ação\nPressione 'enter' para sair\n>>> ");
+        sleep(std::chrono::milliseconds(100));
+      }
+    });
+    enterSingleChar(opt);
+    x = false;
+    loopPrints.join();
+
+    specificStockSwitch(stock, opt);
   } else {
     cout << clear;
     printInLanguage("Non-existent stock ticker\n",
@@ -113,9 +131,82 @@ void Menus::specificStock() {
   }
 }
 
+void Menus::specificStockSwitch(sharedStock &stock, char &opt) {
+  Portifolio &userPortifolio = Portifolio::getPortifolio();
+  if (!isLoop) {
+    switch (opt) {
+    case '1':
+    case '2': {
+      printInLanguage("\nInsert the Stock quantity\n>>> ",
+                      "\nInsira a quantidade de ações\n>>> ");
+      int32_t stockQuantity;
+      cin >> stockQuantity;
+      if (cin.fail()) {
+        stockQuantity = 0;
+        cin.clear();
+        printInLanguage("Enter an valid value\n", "Insira um valor válido\n");
+        sleep(std::chrono::milliseconds(MS_ERROR_SLEEP));
+        return;
+      }
+      if (stockQuantity >= 0)
+        if (opt == '1') {
+          userPortifolio.buyStock(stock, stockQuantity);
+          if (language == '1') {
+            cout << stockQuantity << stock->getTicker()
+                 << " stocks were purshased, each coasting "
+                 << stock->getPrice() << "\nIn total, the cost was $"
+                 << stock->getPrice() * stockQuantity << '\n';
+          } else if (language == '2') {
+            cout << "Foram compradas " << stockQuantity << " ações "
+                 << stock->getTicker() << " saindo cada uma por "
+                 << stock->getPrice() << "\nNo total ficou "
+                 << stock->getPrice() * stockQuantity << '\n';
+          } else
+            exit(2);
+          cin.clear();
+          SysFuncs funcsManager;
+          funcsManager.pressEnterToContinue();
+        } else {
+          userPortifolio.sellStock(stock, stockQuantity);
+          if (language == '1') {
+            cout << stockQuantity << stock->getTicker()
+                 << " stocks were sold, each coasting " << stock->getPrice()
+                 << "\nIn total, the cost was $"
+                 << stock->getPrice() * stockQuantity << '\n';
+          } else if (language == '2') {
+            cout << "Foram vendidas " << stockQuantity << " ações "
+                 << stock->getTicker() << " saindo cada uma por R$"
+                 << stock->getPrice() << "\nNo total ficou R$"
+                 << stock->getPrice() * stockQuantity << '\n';
+          } else
+            exit(2);
+          cin.clear();
+          SysFuncs funcsManager;
+          funcsManager.pressEnterToContinue();
+        }
+      else {
+        printInLanguage(
+            "Cannot buy negative quantity of stocks\n",
+            "Impossivel comprar uma quantidade negativa de ações\n");
+        sleep(std::chrono::milliseconds(MS_ERROR_SLEEP));
+      }
+      break;
+    }
+    case '\n': {
+      return;
+    }
+    default: {
+      printInLanguage("Invalid key\n", "Chave inválida\n");
+      sleep(std::chrono::milliseconds(MS_ERROR_SLEEP));
+      break;
+    }
+    }
+  }
+}
+
 void Menus::fullPortifolioMenu() {
   SysFuncs funcsManager;
-  Portifolio portifolioInstance = Portifolio::getPortifolio();
+  Portifolio &portifolioInstance = Portifolio::getPortifolio();
   portifolioInstance.printFullPortifolio();
   funcsManager.pressEnterToContinue();
 }

@@ -30,9 +30,10 @@ public:
 
   _Market::allMembers getAllMembers();
   void setAllMembers(const _Market::allMembers &);
+  void startMarket(vector<sharedStock> &);
 
 private:
-  Market();
+  Market() = default;
   bool stocksOnScreen;
   void outputPointer_PrintStocks();
   size_t _numberOfStocks{0};

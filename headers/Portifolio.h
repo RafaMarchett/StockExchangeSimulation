@@ -23,6 +23,7 @@ struct allMembers {
 };
 } // namespace _Portifolio
 
+class Tick;
 class Portifolio {
 public:
   void printFullPortifolio() const;
@@ -33,8 +34,15 @@ public:
 
   _Portifolio::allMembers getAllMembers();
   void setAllMembers(const _Portifolio::allMembers &);
+  friend void firstInitialization(Market *&marketInstance, Tick *&tickInstance,
+                                  Portifolio *&portifolioInstance);
+
+  void get_MoneyInAccount();
+  friend Portifolio &getPortifolio();
 
 private:
+  Portifolio() = default;
+  void add_moneyInAccount(double);
   double calculateAveragePrice(const sharedStock &, double, int);
   void calculateTotalParticipation(const sharedStock &);
 

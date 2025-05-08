@@ -20,6 +20,7 @@
 using std::ostream, std::cout, std::cin, std::string, std::shared_ptr,
     std::shared_ptr, std::make_shared, std::vector, std::setw;
 #define LANGUAGE_NOT_FIND 2
+#define MS_ERROR_SLEEP 1500
 inline char language;
 
 const string upArrow{"\033[32m▲\033[37m"}, downArrow{"\033[31m▼\033[37m"};

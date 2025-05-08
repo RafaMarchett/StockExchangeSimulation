@@ -27,7 +27,7 @@ public:
   void setAllMembers(_Tick::allMembers);
 
 private:
-  Tick() {}
+  Tick() = default;
   const size_t tickIntervalMS{100};
   size_t currentTick{0};
 };

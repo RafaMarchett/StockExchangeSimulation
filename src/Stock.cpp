@@ -3,6 +3,7 @@
 
 string Stock::getTicker() const { return _ticker; }
 double Stock::getPrice() const { return _price; }
+string Stock::getSector() const { return _sector; }
 void Stock::setPrice(double price) {
   _price = price;
   priceHistory.insert(priceHistory.end(), price);
@@ -21,13 +22,13 @@ string Stock::getArrow() {
 }
 string Stock::getCompanyName() const { return _companyName; }
 
-Stock::Stock(double price, string ticker, string companyName)
-    : _price(price), _ticker(ticker), _companyName(companyName) {}
+Stock::Stock(double price, string ticker, string companyName,string sector)
+    : _price(price), _ticker(ticker), _companyName(companyName), _sector(sector) {}
 
 void Stock::randomPriceUpdate() {
   srand(std::chrono::high_resolution_clock::now().time_since_epoch().count());
   double highOrDrop = (rand() % 2 == 0 ? -0.89 : 1.0);
-  double randNumber = ((rand() % 8) + 1);
+  double randNumber = ((rand() % 6) + 1);
 
   randNumber *= highOrDrop;
   randNumber += 100;
@@ -45,6 +46,7 @@ _Stock::allMembers Stock::getAllMembers() {
   allMembers._price = _price;
   allMembers._ticker = _ticker;
   allMembers._companyName = _companyName;
+  allMembers._sector = _sector;
   allMembers.priceHistory = priceHistory;
   return allMembers;
 }
@@ -52,5 +54,6 @@ void Stock::setAllMembers(const _Stock::allMembers &inputStruct) {
   _price = inputStruct._price;
   _ticker = inputStruct._ticker;
   _companyName = inputStruct._companyName;
+  _sector = inputStruct._sector;
   priceHistory = inputStruct.priceHistory;
 }

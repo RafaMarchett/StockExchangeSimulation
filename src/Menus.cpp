@@ -110,6 +110,8 @@ void Menus::specificStock() {
       while (x) {
         cout << clear;
         stock->printStockInMarket();
+        printInLanguage("\nSector: ", "\nSetor: ");
+        cout << stock->getSector() << std::endl;
         printInLanguage(
             "\nEnter '1' to buy the Stock\nEnter '2' to sell the "
             "Stock\nPress 'enter' to exit\n>>> ",
@@ -210,6 +212,14 @@ void Menus::fullPortifolioMenu() {
   SysFuncs funcsManager;
   Portifolio &portifolioInstance = Portifolio::getPortifolio();
   portifolioInstance.printFullPortifolio();
+  // temp
+  // string a = "DATA3";
+  // auto stack = portifolioInstance.getPortifolioHistory(a);
+  // while (!stack.empty()) {
+  //   cout << stack.top() << '\n';
+  //   stack.pop();
+  // }
+  // end temp
   funcsManager.pressEnterToContinue();
 }
 

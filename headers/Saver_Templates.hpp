@@ -18,6 +18,17 @@ void Saver::saveElement(std::ofstream &File, vector<T> &inputVector) {
   File.write(reinterpret_cast<char *>(inputVector.data()), size * sizeof(T));
 }
 
+template <typename T>
+void Saver::saveElement(std::ofstream &File, std::stack<T> &inputStack) {
+  size_t size = inputStack.size();
+  saveElement(File, size);
+  std::stack<T> tempStack = inputStack;
+  while (!tempStack.empty()) {
+    saveElement(tempStack.top());
+    tempStack.pop();
+  }
+}
+
 template <typename T> void Saver::saveElement(std::ofstream &File, T &input) {
   File.write(reinterpret_cast<char *>(&input), sizeof(input));
 }
@@ -27,6 +38,23 @@ void Saver::readElement(std::ifstream &File, vector<T> &inputVector) {
   size_t size = inputVector.size();
   readElement(File, size);
   File.read(reinterpret_cast<char *>(inputVector.data()), size * sizeof(T));
+}
+
+template <typename T>
+void Saver::readElement(std::ifstream &File, std::stack<T> &inputStack) {
+  size_t size{0};
+  readElement(File, size);
+  for (size_t i = 0; i < size; i++) {
+    T element;
+    readElement(File, element);
+    inputStack.push(element);
+  }
+  std::stack<T> reversedStack;
+  while (!inputStack.empty()) {
+    reversedStack.push(inputStack.top());
+    inputStack.pop();
+  }
+  inputStack = reversedStack;
 }
 template <typename T> void Saver::readElement(std::ifstream &File, T &input) {
   File.read(reinterpret_cast<char *>(&input), sizeof(input));

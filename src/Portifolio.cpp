@@ -1,4 +1,6 @@
 #include "../headers/Portifolio.h"
+#include "../headers/Market.h"
+#include "../headers/SystemFunctions.h"
 #include "../headers/Tick.h"
 
 Portifolio &Portifolio::getPortifolio() {
@@ -6,12 +8,15 @@ Portifolio &Portifolio::getPortifolio() {
   return portifolio;
 }
 
+std::stack<double>
+Portifolio::getPortifolioHistory(const string &stockTicker) const {
+  return portifolioHistory.at(stockTicker);
+}
 double Portifolio::get_MoneyInAccount() const { return _moneyInAccount; }
 double Portifolio::calculateAveragePrice(const sharedStock &buyedStock,
                                          double buyedPrice, int buyedQuantity) {
   auto &currentStockSecond =
       fullPortifolio.find(buyedStock->getTicker())->second;
-  // currentStockSecond.totalStocks += buyedQuantity;
   cout << "\nInp: " << (buyedQuantity * buyedPrice) << std::endl;
   cout << "\nTEMP: "
        << (currentStockSecond.totalParticipation + buyedPrice * buyedQuantity) /
@@ -48,6 +53,9 @@ void Portifolio::buyStock(const sharedStock &buyedStock,
     } else {
       stockData newStockData = {stockCount, buyedStock->getPrice(), buyedPrice};
       fullPortifolio.try_emplace(buyedStock->getTicker(), newStockData);
+      std::stack<double> tempStack;
+      tempStack.push(buyedStock->getPrice());
+      portifolioHistory.try_emplace(buyedStock->getTicker(), tempStack);
     }
     _moneyInAccount -= buyedPrice * stockCount;
     calculateTotalParticipation(buyedStock);
@@ -71,24 +79,48 @@ void Portifolio::sellStock(const sharedStock &selledStock,
 void Portifolio::printFullPortifolio() const {
   cout << clear;
   short counter{0};
-  printInLanguage("Money in account: ", "Dinheiro na Conta: ");
-  cout << get_MoneyInAccount() << '\n';
-  for (auto &stock : fullPortifolio) {
-    ++counter;
-    if (language == '1') {
-      cout << bold << stock.first << noBold
-           << " Average Price: " << stock.second.averagePrice
-           << " Stock Quantity: " << stock.second.totalStocks << "  TOTAL "
-           << stock.second.totalParticipation << std::endl;
-    } else if (language == '2') {
-      cout << bold << stock.first << noBold
-           << " Preço médio: " << stock.second.averagePrice
-           << " Quantidade: " << stock.second.totalStocks << bold
-           << "   TOTAL: " << stock.second.totalParticipation << noBold
-           << std::endl;
-    } else
-      exit(2);
-  }
+  bool runLoop = true;
+  std::thread printLoop([&]() {
+    while (runLoop) {
+      cout << clear;
+      printInLanguage("Money in account: ", "Dinheiro na Conta: ");
+      cout << get_MoneyInAccount() << "\n\n";
+      for (auto &stock : fullPortifolio) {
+        ++counter;
+        if (language == '1') {
+          cout << bold << stock.first << noBold
+               << " Average Price: " << stock.second.averagePrice << ' '
+               << (stock.second.averagePrice <
+                           portifolioHistory.at(stock.first).top()
+                       ? upArrow
+                       : downArrow)
+               << " Stock Quantity: " << stock.second.totalStocks << "  TOTAL "
+               << stock.second.totalParticipation << "\n Current Price: "
+               << portifolioHistory.at(stock.first).top() << "\n\n";
+        } else if (language == '2') {
+          cout << bold << stock.first << noBold
+               << " Preço médio: " << stock.second.averagePrice << ' '
+               << (stock.second.averagePrice <
+                           portifolioHistory.at(stock.first).top()
+                       ? upArrow
+                       : downArrow)
+               << " Quantidade de ações: " << stock.second.totalStocks << bold
+               << "  TOTAL: " << stock.second.totalParticipation << noBold
+               << "\n Preço Atual: " << portifolioHistory.at(stock.first).top()
+               << "\n\n";
+        } else
+          exit(2);
+      }
+      printInLanguage("Press 'Enter' to continue...",
+                      "Pressione 'Enter' para continuar...");
+      cout << std::endl;
+      sleep(std::chrono::milliseconds(100));
+    }
+  });
+  SysFuncs funcManager;
+  funcManager.pressEnterToContinue();
+  runLoop = false;
+  printLoop.join();
   if (counter == 0)
     printInLanguage("The Portifolio is empty\n", "O Portifolio está vazio\n");
 }
@@ -98,6 +130,8 @@ _Portifolio::allMembers Portifolio::getAllMembers() {
   allMembers.fullPortifolio.insert(fullPortifolio.begin(),
                                    fullPortifolio.end());
   allMembers._moneyInAccount = _moneyInAccount;
+  allMembers.portifolioHistory.insert(portifolioHistory.begin(),
+                                      portifolioHistory.end());
   return allMembers;
 }
 
@@ -105,5 +139,18 @@ void Portifolio::setAllMembers(const _Portifolio::allMembers &inputStruct) {
   fullPortifolio.insert(inputStruct.fullPortifolio.begin(),
                         inputStruct.fullPortifolio.end());
   _moneyInAccount = inputStruct._moneyInAccount;
+  portifolioHistory.insert(inputStruct.portifolioHistory.begin(),
+                           inputStruct.portifolioHistory.end());
 }
 void Portifolio::add_moneyInAccount(double input) { _moneyInAccount += input; }
+void Portifolio::updatePortifolioHistory() {
+  Market &mkt = Market::getMarket();
+  for (auto &stock : fullPortifolio) {
+    const auto &stockInHistory = portifolioHistory.find(stock.first);
+    if (stockInHistory != portifolioHistory.end()) {
+      stockInHistory->second.push(
+          mkt.findTicker(stock.first)
+              ->getPrice()); // Push current price in history
+    }
+  }
+}

@@ -16,6 +16,8 @@ private:
   void truncFile();
 
   template <typename T> static void saveElement(std::ofstream &, vector<T> &);
+  template <typename T>
+  static void saveElement(std::ofstream &, std::stack<T> &);
   template <typename T> static void saveElement(std::ofstream &, T &);
 
   template <IsStruct T> static void saveElement(std::ofstream &, T &);
@@ -30,6 +32,8 @@ private:
 
   void static readElement(std::ifstream &, string &);
   template <typename T> void static readElement(std::ifstream &, vector<T> &);
+  template <typename T>
+  void static readElement(std::ifstream &, std::stack<T> &);
   template <typename T> void static readElement(std::ifstream &, T &);
 
   template <typename key, typename value>

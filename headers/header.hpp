@@ -10,6 +10,7 @@
 #include <iostream>
 #include <limits>
 #include <memory>
+#include <stack>
 #include <string>
 #include <thread>
 #include <type_traits>

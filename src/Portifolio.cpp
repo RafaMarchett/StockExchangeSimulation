@@ -9,10 +9,15 @@ Portifolio &Portifolio::getPortifolio() {
 double Portifolio::get_MoneyInAccount() const { return _moneyInAccount; }
 double Portifolio::calculateAveragePrice(const sharedStock &buyedStock,
                                          double buyedPrice, int buyedQuantity) {
-  auto currentStockSecond =
+  auto &currentStockSecond =
       fullPortifolio.find(buyedStock->getTicker())->second;
-  return (currentStockSecond.averagePrice * currentStockSecond.totalStocks +
-          buyedPrice * buyedQuantity) /
+  // currentStockSecond.totalStocks += buyedQuantity;
+  cout << "\nInp: " << (buyedQuantity * buyedPrice) << std::endl;
+  cout << "\nTEMP: "
+       << (currentStockSecond.totalParticipation + buyedPrice * buyedQuantity) /
+              (buyedQuantity + currentStockSecond.totalStocks)
+       << std::endl;
+  return (currentStockSecond.totalParticipation + buyedPrice * buyedQuantity) /
          (buyedQuantity + currentStockSecond.totalStocks);
 }
 
@@ -38,14 +43,13 @@ void Portifolio::buyStock(const sharedStock &buyedStock,
     if (fullPortifolio.find(buyedStock->getTicker()) != fullPortifolio.end()) {
       auto stockInPortifolio = fullPortifolio.find(buyedStock->getTicker());
       stockInPortifolio->second.averagePrice =
-          calculateAveragePrice(buyedStock, buyedPrice, stockCount);
+          calculateAveragePrice(buyedStock, buyedStock->getPrice(), stockCount);
       stockInPortifolio->second.totalStocks += stockCount;
     } else {
       stockData newStockData = {stockCount, buyedStock->getPrice(), buyedPrice};
-      // fullPortifolio.insert({buyedStock->getTicker(), newStockData});
       fullPortifolio.try_emplace(buyedStock->getTicker(), newStockData);
     }
-    _moneyInAccount -= buyedPrice;
+    _moneyInAccount -= buyedPrice * stockCount;
     calculateTotalParticipation(buyedStock);
   }
 }

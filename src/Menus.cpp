@@ -161,6 +161,8 @@ void Menus::specificStockSwitch(sharedStock &stock, char &opt) {
                  << stock->getTicker() << " saindo cada uma por "
                  << stock->getPrice() << "\nNo total ficou "
                  << stock->getPrice() * stockQuantity << '\n';
+            SysFuncs funcManager;
+            funcManager.pressEnterToContinue();
           } else
             exit(2);
           cin.clear();

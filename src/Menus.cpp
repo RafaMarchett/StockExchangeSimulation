@@ -42,6 +42,10 @@ void Menus::homeMenuOptions(char input) {
     fullPortifolioMenu();
     break;
   }
+  case '4': {
+    allTransactionsMenu();
+    break;
+  }
 
   default: {
     printInLanguage("\nInsert a valid option\n", "\nInsira uma opção válida\n");
@@ -58,10 +62,10 @@ void Menus::homeMenu() {
   printInLanguage(
       "Enter '1' to go to the \"Stock Market\" menu\nEnter '2' to go to the "
       "\"Single Stock\" menu\nEnter '3' to go to the \"Full Portifolio\" "
-      "menu\n",
+      "menu\nEnter '4' to go to the \"All Transactions\" menu\n",
       "Insira '1' para ir ao menu \"Mercado de Ações\"\nInsira '2' para ir "
       "ao menu \"Ação única\"\nInsira '3' para ir ao menu \"Portifolio "
-      "Completo\"\n");
+      "Completo\"\nInsira '4' para ir ao menu \"Todas as Transações\"\n");
 
   tempInput = SysFuncsManager.getSingleKey();
   homeMenuOptions(tempInput);
@@ -153,6 +157,9 @@ void Menus::specificStockSwitch(sharedStock &stock, char &opt) {
       if (stockQuantity >= 0)
         if (opt == '1') {
           userPortifolio.buyStock(stock, stockQuantity);
+          if ((stock->getPrice() * stockQuantity) >
+              userPortifolio.get_MoneyInAccount())
+            return;
           if (language == '1') {
             cout << stockQuantity << stock->getTicker()
                  << " stocks were purshased, each coasting "
@@ -172,6 +179,9 @@ void Menus::specificStockSwitch(sharedStock &stock, char &opt) {
           funcsManager.pressEnterToContinue();
         } else {
           userPortifolio.sellStock(stock, stockQuantity);
+          if ((stock->getPrice() * stockQuantity) <=
+              userPortifolio.get_MoneyInAccount())
+            return;
           if (language == '1') {
             cout << stockQuantity << stock->getTicker()
                  << " stocks were sold, each coasting " << stock->getPrice()
@@ -212,14 +222,6 @@ void Menus::fullPortifolioMenu() {
   SysFuncs funcsManager;
   Portifolio &portifolioInstance = Portifolio::getPortifolio();
   portifolioInstance.printFullPortifolio();
-  // temp
-  // string a = "DATA3";
-  // auto stack = portifolioInstance.getPortifolioHistory(a);
-  // while (!stack.empty()) {
-  //   cout << stack.top() << '\n';
-  //   stack.pop();
-  // }
-  // end temp
   funcsManager.pressEnterToContinue();
 }
 
@@ -228,4 +230,16 @@ void Menus::enterSingleChar(char &input) {
   char temp = funcsManager.getSingleKey();
   isLoop = false;
   input = temp;
+}
+
+void Menus::allTransactionsMenu() {
+  Portifolio &portifolioInstance = Portifolio::getPortifolio();
+  SysFuncs funcsManager;
+  const auto &allTransactions = portifolioInstance.getAllTransactions();
+  for (const auto &transaction : allTransactions) {
+    cout << transaction.first << "º ";
+    printInLanguage("transaction: ", "transação: ");
+    transaction.second.printTransaction();
+  }
+  funcsManager.pressEnterToContinue();
 }

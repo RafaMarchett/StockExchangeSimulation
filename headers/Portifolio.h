@@ -3,7 +3,32 @@
 #include "header.hpp"
 #ifndef PORTIFOLIO
 #define PORTIFOLIO
+typedef size_t transaction_number;
 
+struct transactionData {
+  string stockTicker;
+  double stockValue;
+  size_t stockCount;
+  bool isBuy;
+
+  auto toTuple() {
+    return std::tie(stockTicker, stockValue, stockCount, isBuy);
+  }
+  inline void printTransaction() const {
+    cout << '\n';
+    if (isBuy)
+      printInLanguage("PURCHASE ORDER", "ORDEM DE COMPRA");
+    else
+      printInLanguage("SALES ORDER", "ORDEM DE VENDA");
+    cout << " | ";
+    printInLanguage("Ticker: ", "Ticker: ");
+    cout << stockTicker << " | ";
+    printInLanguage("Unit price: ", "Preço unitário: ");
+    cout << stockValue << " | ";
+    printInLanguage("Quantity: ", "Quantidade: ");
+    cout << stockCount << std::endl;
+  }
+};
 struct stockData {
   size_t totalStocks{0};
   double averagePrice{0.0f};
@@ -18,10 +43,12 @@ struct allMembers {
 
   std::unordered_map<string, stockData> fullPortifolio;
   std::unordered_map<string, std::stack<double>> portifolioHistory;
+  std::map<transaction_number, transactionData> allTransactions;
   double _moneyInAccount;
 
   auto toTuple() {
-    return std::tie(fullPortifolio, _moneyInAccount, portifolioHistory);
+    return std::tie(fullPortifolio, _moneyInAccount, portifolioHistory,
+                    allTransactions);
   }
 };
 } // namespace _Portifolio
@@ -36,13 +63,15 @@ public:
   static Portifolio &getPortifolio();
   double get_MoneyInAccount() const;
   void updatePortifolioHistory();
+  void newTransaction(const string &, const double &, const size_t &,
+                      const bool &);
+  std::map<transaction_number, transactionData> getAllTransactions() const;
 
   _Portifolio::allMembers getAllMembers();
   void setAllMembers(const _Portifolio::allMembers &);
   friend void firstInitialization(Market *&marketInstance, Tick *&tickInstance,
                                   Portifolio *&portifolioInstance);
 
-  void get_MoneyInAccount();
   friend Portifolio &getPortifolio();
 
 private:
@@ -53,6 +82,7 @@ private:
   std::unordered_map<string, std::stack<double>> portifolioHistory;
 
   std::unordered_map<string, stockData> fullPortifolio;
+  std::map<transaction_number, transactionData> allTransactions;
   double _moneyInAccount{0.0f};
 };
 

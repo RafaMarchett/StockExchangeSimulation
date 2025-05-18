@@ -60,23 +60,49 @@ template <typename T> void Saver::readElement(std::ifstream &File, T &input) {
   File.read(reinterpret_cast<char *>(&input), sizeof(input));
 }
 
-template <typename key, typename value>
-void Saver::readElement(std::ifstream &File,
-                        std::unordered_map<key, value> &inputMap) {
+template <typename Key, typename Value>
+void Saver::readElement(std::ifstream &File, std::map<Key, Value> &inputMap) {
   size_t size{0};
   readElement(File, size);
   for (size_t i = 0; i < size; ++i) {
-    key _key;
-    value _value;
+    Key _key;
+    Value _value;
     readElement(File, _key);
     readElement(File, _value);
     inputMap[_key] = _value;
   }
 }
+template <typename Key, typename Value>
+void Saver::readElement(std::ifstream &File,
+                        std::unordered_map<Key, Value> &inputMap) {
 
-template <typename key, typename value>
-void Saver::saveElement(std::ofstream &File,
-                        std::unordered_map<key, value> &inputMap) {
+  size_t size{0};
+  readElement(File, size);
+  for (size_t i = 0; i < size; ++i) {
+    Key _key;
+    Value _value;
+    readElement(File, _key);
+    readElement(File, _value);
+    inputMap[_key] = _value;
+  }
+}
+// template <IsMapLike mpType>
+// void Saver::readElement(std::ifstream &File, mpType &inputMap) {
+//   size_t size{0};
+//   readElement(File, size);
+//   for (size_t i = 0; i < size; ++i) {
+//     using key = typename mpType::key_type;
+//     using value = typename mpType::mapped_type;
+//     key _key;
+//     value _value;
+//     readElement(File, _key);
+//     readElement(File, _value);
+//     inputMap[_key] = _value;
+//   }
+// }
+
+template <IsMapLike mpType>
+void Saver::saveElement(std::ofstream &File, mpType &inputMap) {
   size_t size{0};
   saveElement(File, size);
   for (const auto &pair : inputMap) {

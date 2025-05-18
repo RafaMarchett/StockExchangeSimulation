@@ -9,6 +9,7 @@
 #include <iomanip>
 #include <iostream>
 #include <limits>
+#include <map>
 #include <memory>
 #include <stack>
 #include <string>
@@ -64,4 +65,11 @@ inline void printPressEnter() {
 template <typename ABC>
 concept IsStruct = std::is_class_v<ABC>;
 
+template <typename T>
+concept IsMapLike = requires(T mp) {
+  typename T::key_type;
+  typename T::mapped_type;
+  { mp.begin() } -> std::input_or_output_iterator;
+  { mp.end() } -> std::input_or_output_iterator;
+};
 #endif // HEADER_HPP

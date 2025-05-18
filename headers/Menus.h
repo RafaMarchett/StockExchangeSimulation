@@ -19,5 +19,6 @@ private:
   static void allStocksMenu();
   static void specificStock();
   static void fullPortifolioMenu();
+  static void allTransactionsMenu();
 };
 #endif // MENUS

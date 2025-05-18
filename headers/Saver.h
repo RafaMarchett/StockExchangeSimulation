@@ -13,7 +13,7 @@ public:
 private:
   template <typename T> static void saveClass(T &);
   template <typename T> static void readClass(T &);
-  void truncFile();
+  static void truncFile();
 
   template <typename T> static void saveElement(std::ofstream &, vector<T> &);
   template <typename T>
@@ -23,8 +23,8 @@ private:
   template <IsStruct T> static void saveElement(std::ofstream &, T &);
   template <IsStruct T>
   static void saveElement(std::ofstream &, shared_ptr<T> &);
-  template <typename key, typename value>
-  void static saveElement(std::ofstream &, std::unordered_map<key, value> &);
+  template <IsMapLike mpType>
+  void static saveElement(std::ofstream &, mpType &);
 
   void static saveElement(std::ofstream &, string &);
   std::ofstream static saveFile();
@@ -36,8 +36,12 @@ private:
   void static readElement(std::ifstream &, std::stack<T> &);
   template <typename T> void static readElement(std::ifstream &, T &);
 
-  template <typename key, typename value>
-  void static readElement(std::ifstream &, std::unordered_map<key, value> &);
+  // template <IsMapLike mpType>
+  // void static readElement(std::ifstream &, mpType &);
+  template <typename Key, typename Value>
+  void static readElement(std::ifstream &, std::map<Key, Value> &);
+  template <typename Key, typename Value>
+  void static readElement(std::ifstream &, std::unordered_map<Key, Value> &);
   template <IsStruct T> void static readElement(std::ifstream &, T &);
   template <IsStruct T>
   void static readElement(std::ifstream &, shared_ptr<T> &);

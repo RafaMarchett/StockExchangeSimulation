@@ -8,6 +8,19 @@ Portifolio &Portifolio::getPortifolio() {
   return portifolio;
 }
 
+std::map<transaction_number, transactionData>
+Portifolio::getAllTransactions() const {
+  return allTransactions;
+}
+void Portifolio::newTransaction(const string &inputTicker,
+                                const double &inputPrice,
+                                const size_t &stockCount,
+                                const bool &inputIsBuy) {
+  transaction_number lastTransactionNumber = allTransactions.end()->first;
+  transactionData newTransaction = {inputTicker, inputPrice, stockCount,
+                                    inputIsBuy};
+  allTransactions.try_emplace(lastTransactionNumber + 1, newTransaction);
+}
 std::stack<double>
 Portifolio::getPortifolioHistory(const string &stockTicker) const {
   return portifolioHistory.at(stockTicker);
@@ -36,8 +49,9 @@ void Portifolio::calculateTotalParticipation(const sharedStock &stock) {
 
 void Portifolio::buyStock(const sharedStock &buyedStock,
                           const size_t &stockCount) {
+  const double stockPrice = buyedStock->getPrice();
   if (buyedStock && stockCount > 0) {
-    double buyedPrice = stockCount * buyedStock->getPrice();
+    double buyedPrice = stockCount * stockPrice;
     if (_moneyInAccount < buyedPrice) {
       printInLanguage("You don't have enough money in the account\n",
                       "Você não tem dinheiro suficiente na conta\n");
@@ -48,28 +62,31 @@ void Portifolio::buyStock(const sharedStock &buyedStock,
     if (fullPortifolio.find(buyedStock->getTicker()) != fullPortifolio.end()) {
       auto stockInPortifolio = fullPortifolio.find(buyedStock->getTicker());
       stockInPortifolio->second.averagePrice =
-          calculateAveragePrice(buyedStock, buyedStock->getPrice(), stockCount);
+          calculateAveragePrice(buyedStock, stockPrice, stockCount);
       stockInPortifolio->second.totalStocks += stockCount;
     } else {
-      stockData newStockData = {stockCount, buyedStock->getPrice(), buyedPrice};
+      stockData newStockData = {stockCount, stockPrice, buyedPrice};
       fullPortifolio.try_emplace(buyedStock->getTicker(), newStockData);
       std::stack<double> tempStack;
-      tempStack.push(buyedStock->getPrice());
+      tempStack.push(stockPrice);
       portifolioHistory.try_emplace(buyedStock->getTicker(), tempStack);
     }
     _moneyInAccount -= buyedPrice * stockCount;
     calculateTotalParticipation(buyedStock);
+    newTransaction(buyedStock->getTicker(), stockPrice, stockCount, true);
   }
 }
 
 void Portifolio::sellStock(const sharedStock &selledStock,
                            const size_t &stockCounter) {
+  const double stockPrice = selledStock->getPrice();
   auto stocksInPortifolio = fullPortifolio.find(selledStock->getTicker());
   if (stocksInPortifolio != fullPortifolio.end() &&
       stocksInPortifolio->second.totalStocks >= stockCounter) {
     stocksInPortifolio->second.totalStocks -= stockCounter;
     calculateTotalParticipation(selledStock);
-    _moneyInAccount += selledStock->getPrice() * stockCounter;
+    _moneyInAccount += stockPrice * stockCounter;
+    newTransaction(selledStock->getTicker(), stockPrice, stockCounter, false);
   } else {
     printInLanguage("You don't have enough stocks to sell",
                     "Você não possuí ações suficientes para vender\n");
@@ -132,6 +149,8 @@ _Portifolio::allMembers Portifolio::getAllMembers() {
   allMembers._moneyInAccount = _moneyInAccount;
   allMembers.portifolioHistory.insert(portifolioHistory.begin(),
                                       portifolioHistory.end());
+  allMembers.allTransactions.insert(allTransactions.begin(),
+                                    allTransactions.end());
   return allMembers;
 }
 
@@ -141,6 +160,8 @@ void Portifolio::setAllMembers(const _Portifolio::allMembers &inputStruct) {
   _moneyInAccount = inputStruct._moneyInAccount;
   portifolioHistory.insert(inputStruct.portifolioHistory.begin(),
                            inputStruct.portifolioHistory.end());
+  allTransactions.insert(inputStruct.allTransactions.begin(),
+                         inputStruct.allTransactions.end());
 }
 void Portifolio::add_moneyInAccount(double input) { _moneyInAccount += input; }
 void Portifolio::updatePortifolioHistory() {

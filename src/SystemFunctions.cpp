@@ -59,3 +59,24 @@ void SysFuncs::pressEnterToContinue() {
   restore_terminal_mode();
 #endif
 }
+
+int SysFuncs::getTerminalLines() {
+#ifdef _WIN32
+  GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+  rows = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+  return rows;
+#else
+  ioctl(STDOUT_FILENO, TIOCGWINSZ, &w_size);
+  return w_size.ws_row;
+#endif
+}
+int SysFuncs::getTerminalColumns() {
+#ifdef _WIN32
+  GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+  columns = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+  return columns;
+#else
+  ioctl(STDOUT_FILENO, TIOCGWINSZ, &w_size);
+  return w_size.ws_col;
+#endif // _WIN32
+}

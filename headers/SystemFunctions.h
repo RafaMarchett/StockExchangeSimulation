@@ -5,26 +5,26 @@
 
 #ifdef _WIN32
 #include <conio.h>
-
+#include <windows.h>
 #else // LINUX/MAC
+#include <sys/ioctl.h>
 #include <termios.h>
 #include <unistd.h>
 
 #endif
 
-#ifdef _WIN32
-
-#else
-
-#endif // _WIN32
 class SysFuncs {
 
 public:
   char getSingleKey();
   void pressEnterToContinue();
+  int getTerminalLines();
+  int getTerminalColumns();
 
 private:
 #ifdef _WIN32
+  CONSOLE_SCREEN_BUFFER_INFO csbi;
+  int colluns{0}, rows{0};
   HANDLE hConsole = GetStdHandle(STD_INPUT_HANDLE);
   DWORD original_mode;
   GetConsoleMode(hConsole, &original_mode);
@@ -39,6 +39,7 @@ private:
 
   termios original_termios;
   bool original_termios_saved = false;
+  struct winsize w_size;
 #endif // _WIN32
 };
 

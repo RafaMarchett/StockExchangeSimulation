@@ -1,0 +1,30 @@
+#pragma once
+#ifndef GRAPHS
+#define GRAPHS
+#include "header.hpp"
+
+template <typename T> struct dataValues {
+  T minValue, maxValue, amplitude;
+  dataValues(T _minValue, T _maxValue)
+      : minValue(_minValue), maxValue(_maxValue),
+        amplitude(_maxValue - _minValue) {}
+};
+
+class Graphs {
+public:
+  template <typename T> void columnChart(const vector<T> &);
+
+private:
+  int plotLine, barWidth, startColumn, graphRow, graphColumns;
+  size_t row, columns, leftPadding;
+  size_t mainVecSize;
+  vector<string> screen;
+
+  template <typename T> void drawColumnBars(const vector<T> &, dataValues<T> &);
+  template <typename T> void fillColumns(const vector<T> &);
+  template <typename T>
+  void plotYAxisLabels(const vector<T> &, dataValues<T> &);
+  template <typename T> void plotXAxisLabels(const vector<T> &);
+};
+#include "Graphs_Templates.hpp"
+#endif // GRAPHS

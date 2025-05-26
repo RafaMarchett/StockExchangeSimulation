@@ -1,3 +1,4 @@
+#include "../headers/Graphs.h"
 #include "../headers/Market.h"
 #include "../headers/Menus.h"
 #include "../headers/Portifolio.h"

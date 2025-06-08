@@ -2,6 +2,7 @@
 #include "../headers/Market.h"
 #include "../headers/SystemFunctions.h"
 #include "../headers/Tick.h"
+#include <compare>
 
 Portifolio &Portifolio::getPortifolio() {
   static Portifolio portifolio;
@@ -29,6 +30,7 @@ std::stack<double> Portifolio::getPortifolioHistory() const {
   return portifolioHistory;
 }
 double Portifolio::get_MoneyInAccount() const { return _moneyInAccount; }
+double Portifolio::get_TotalMoney() const { return _totalMoney; }
 double Portifolio::calculateAveragePrice(const sharedStock &buyedStock,
                                          double buyedPrice, int buyedQuantity) {
   auto &currentStockSecond =
@@ -108,6 +110,7 @@ void Portifolio::printFullPortifolio() const {
       for (auto &stock : fullPortifolio) {
         ++counter;
         if (language == '1') {
+
           cout << bold << stock.first << noBold
                << " Average Price: " << stock.second.averagePrice << ' '
                << (stock.second.averagePrice <
@@ -116,7 +119,9 @@ void Portifolio::printFullPortifolio() const {
                        : downArrow)
                << " Stock Quantity: " << stock.second.totalStocks << "  TOTAL "
                << stock.second.totalParticipation << "\n Current Price: "
-               << stockHistoryInPortifolio.at(stock.first).top() << "\n\n";
+               << stockHistoryInPortifolio.at(stock.first).top() << bold
+               << "\nTotal Money in Portifolio: " << noBold << _totalMoney
+               << "\n\n";
         } else if (language == '2') {
           cout << bold << stock.first << noBold
                << " Preço médio: " << stock.second.averagePrice << ' '
@@ -127,7 +132,9 @@ void Portifolio::printFullPortifolio() const {
                << " Quantidade de ações: " << stock.second.totalStocks << bold
                << "  TOTAL: " << stock.second.totalParticipation << noBold
                << "\n Preço Atual: "
-               << stockHistoryInPortifolio.at(stock.first).top() << "\n\n";
+               << stockHistoryInPortifolio.at(stock.first).top() << bold
+               << "\nDinheiro total no portifolio: " << noBold << _totalMoney
+               << "\n\n";
         } else
           exit(2);
       }
@@ -150,6 +157,7 @@ _Portifolio::allMembers Portifolio::getAllMembers() {
   allMembers.fullPortifolio.insert(fullPortifolio.begin(),
                                    fullPortifolio.end());
   allMembers._moneyInAccount = _moneyInAccount;
+  allMembers._totalMoney = _totalMoney;
   allMembers.stockHistoryInPortifolio.insert(stockHistoryInPortifolio.begin(),
                                              stockHistoryInPortifolio.end());
   allMembers.portifolioHistory = portifolioHistory;
@@ -162,6 +170,7 @@ void Portifolio::setAllMembers(const _Portifolio::allMembers &inputStruct) {
   fullPortifolio.insert(inputStruct.fullPortifolio.begin(),
                         inputStruct.fullPortifolio.end());
   _moneyInAccount = inputStruct._moneyInAccount;
+  _totalMoney = inputStruct._totalMoney;
   stockHistoryInPortifolio.insert(inputStruct.stockHistoryInPortifolio.begin(),
                                   inputStruct.stockHistoryInPortifolio.end());
   portifolioHistory = inputStruct.portifolioHistory;
@@ -171,12 +180,17 @@ void Portifolio::setAllMembers(const _Portifolio::allMembers &inputStruct) {
 void Portifolio::add_moneyInAccount(double input) { _moneyInAccount += input; }
 void Portifolio::updatePortifolioHistory() {
   Market &mkt = Market::getMarket();
+  double tempTotalMoney{0.0f};
   for (auto &stock : fullPortifolio) {
     const auto &stockInHistory = stockHistoryInPortifolio.find(stock.first);
     if (stockInHistory != stockHistoryInPortifolio.end()) {
       stockInHistory->second.push(
           mkt.findTicker(stock.first)
               ->getPrice()); // Push current price in history
+      tempTotalMoney += mkt.findTicker(stock.first)->getPrice();
     }
   }
+  tempTotalMoney += _moneyInAccount;
+  _totalMoney = tempTotalMoney;
+  portifolioHistory.push(_totalMoney);
 }

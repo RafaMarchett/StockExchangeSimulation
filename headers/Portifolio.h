@@ -46,10 +46,12 @@ struct allMembers {
   std::stack<double> portifolioHistory;
   std::map<transaction_number, transactionData> allTransactions;
   double _moneyInAccount;
+  double _totalMoney;
 
   auto toTuple() {
-    return std::tie(fullPortifolio, _moneyInAccount, stockHistoryInPortifolio,
-                    allTransactions, portifolioHistory);
+    return std::tie(fullPortifolio, _moneyInAccount, _totalMoney,
+                    stockHistoryInPortifolio, allTransactions,
+                    portifolioHistory);
   }
 };
 } // namespace _Portifolio
@@ -64,6 +66,7 @@ public:
   void sellStock(const sharedStock &, const size_t &);
   static Portifolio &getPortifolio();
   double get_MoneyInAccount() const;
+  double get_TotalMoney() const;
   void updatePortifolioHistory();
   void newTransaction(const string &, const double &, const size_t &,
                       const bool &);
@@ -87,6 +90,7 @@ private:
   std::unordered_map<string, stockData> fullPortifolio;
   std::map<transaction_number, transactionData> allTransactions;
   double _moneyInAccount{0.0f};
+  double _totalMoney{0.0f};
 };
 
 #endif // PORTIFOLIO

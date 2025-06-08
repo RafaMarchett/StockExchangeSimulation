@@ -253,12 +253,33 @@ void Menus::fullPortifolioMenu() {
                   "Insira '1' para ver o grafico de evolução patrimonial, ou "
                   "\npressione 'Enter' para continuar\n");
   char input{'/'};
-  funcsManager.getSingleKey();
+  input = funcsManager.getSingleKey();
   if (input == '1') {
     vector<double> portifolioHistoryVector;
-    auto &&tempStack = portifolioInstance.getPortifolioHistory();
-    graphsManager.columnChart(portifolioHistoryVector);
-    funcsManager.pressEnterToContinue();
+    auto tempStack = portifolioInstance.getPortifolioHistory();
+    if (tempStack.empty()) {
+      printInLanguage("The portifolio is empty\n", "O portifolio está vazio\n");
+      funcsManager.pressEnterToContinue();
+      return;
+    }
+    while (!tempStack.empty()) {
+      portifolioHistoryVector.push_back(tempStack.top());
+      tempStack.pop();
+    }
+    char stopGraphLoop = '/';
+    std::thread graphLoop([&]() {
+      while (1) {
+        if (stopGraphLoop == '\n')
+          break;
+        graphsManager.columnChart(portifolioHistoryVector);
+        printInLanguage("Press 'enter' to continue\n",
+                        "Pressione 'enter' para continuar\n");
+        sleep(1000ms);
+      }
+    });
+    stopGraphLoop = funcsManager.getSingleKey();
+    graphLoop.join();
+    fullPortifolioMenu();
   }
   if (input == '\n')
     return;

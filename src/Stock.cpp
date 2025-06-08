@@ -57,3 +57,6 @@ void Stock::setAllMembers(const _Stock::allMembers &inputStruct) {
   _sector = inputStruct._sector;
   priceHistory = inputStruct.priceHistory;
 }
+vector<double> Stock::getPriceHistory(){
+  return priceHistory;
+}

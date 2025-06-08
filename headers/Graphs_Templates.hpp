@@ -2,7 +2,12 @@
 #include "Graphs.h"
 #include "SystemFunctions.h"
 
+// void Graphs::resetAllVars() { screen = {""}; }
 template <typename T> void Graphs::columnChart(const vector<T> &mainVec) {
+  // resetAllVars();
+  plotLine = barWidth = startColumn = graphRow = graphColumns = 0;
+  row = columns = leftPadding = mainVecSize = 0;
+  screen = {""};
   SysFuncs funcsManager;
   row = funcsManager.getTerminalLines() - 3;
   columns = funcsManager.getTerminalColumns();
@@ -28,13 +33,13 @@ template <typename T> void Graphs::columnChart(const vector<T> &mainVec) {
   plotYAxisLabels(mainVec, T_Values);
 
   plotXAxisLabels(mainVec);
-  cout << '\n';
+  cout << clear << '\n';
+  int counter{0};
   for (auto &it : screen) {
-    static size_t counter{0};
     cout << it << (counter < row ? '\n' : ' ');
     counter++;
   }
-  funcsManager.pressEnterToContinue();
+  cout << std::flush;
 }
 
 template <typename T>

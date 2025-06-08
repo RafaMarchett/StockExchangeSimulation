@@ -17,7 +17,7 @@ private:
   static void specificStockSwitch(sharedStock &, char &);
 
   static void allStocksMenu();
-  static void specificStock();
+  static void specificStock(sharedStock stock = nullptr);
   static void fullPortifolioMenu();
   static void allTransactionsMenu();
 };

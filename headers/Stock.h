@@ -35,6 +35,8 @@ public:
   _Stock::allMembers getAllMembers();
   void setAllMembers(const _Stock::allMembers &);
 
+  vector<double> getPriceHistory();
+
 private:
   double _price{0.0f};
   string _ticker, _companyName, _sector;

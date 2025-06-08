@@ -16,10 +16,10 @@ public:
 
 private:
   int plotLine, barWidth, startColumn, graphRow, graphColumns;
-  size_t row, columns, leftPadding;
-  size_t mainVecSize;
+  size_t row, columns, leftPadding, mainVecSize;
   vector<string> screen;
 
+  void resetAllVars();
   template <typename T> void drawColumnBars(const vector<T> &, dataValues<T> &);
   template <typename T> void fillColumns(const vector<T> &);
   template <typename T>

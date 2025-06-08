@@ -42,13 +42,14 @@ namespace _Portifolio {
 struct allMembers {
 
   std::unordered_map<string, stockData> fullPortifolio;
-  std::unordered_map<string, std::stack<double>> portifolioHistory;
+  std::unordered_map<string, std::stack<double>> stockHistoryInPortifolio;
+  std::stack<double> portifolioHistory;
   std::map<transaction_number, transactionData> allTransactions;
   double _moneyInAccount;
 
   auto toTuple() {
-    return std::tie(fullPortifolio, _moneyInAccount, portifolioHistory,
-                    allTransactions);
+    return std::tie(fullPortifolio, _moneyInAccount, stockHistoryInPortifolio,
+                    allTransactions, portifolioHistory);
   }
 };
 } // namespace _Portifolio
@@ -56,7 +57,8 @@ struct allMembers {
 class Tick;
 class Portifolio {
 public:
-  std::stack<double> getPortifolioHistory(const string &) const;
+  std::stack<double> getStockHistoryInPortifolio(const string &) const;
+  std::stack<double> getPortifolioHistory() const;
   void printFullPortifolio() const;
   void buyStock(const sharedStock &, const size_t &);
   void sellStock(const sharedStock &, const size_t &);
@@ -79,7 +81,8 @@ private:
   void add_moneyInAccount(double);
   double calculateAveragePrice(const sharedStock &, double, int);
   void calculateTotalParticipation(const sharedStock &);
-  std::unordered_map<string, std::stack<double>> portifolioHistory;
+  std::stack<double> portifolioHistory;
+  std::unordered_map<string, std::stack<double>> stockHistoryInPortifolio;
 
   std::unordered_map<string, stockData> fullPortifolio;
   std::map<transaction_number, transactionData> allTransactions;

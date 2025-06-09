@@ -64,7 +64,6 @@ void mainLoop() {
 }
 
 int main(int agrc, char *argv[]) {
-
   std::fstream File(fileName, std::ios::in | std::ios::ate);
   if (!File || File.tellg() == 0)
     firstInitialization(mainMarket, mainTick,

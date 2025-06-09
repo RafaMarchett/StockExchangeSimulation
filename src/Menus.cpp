@@ -222,7 +222,7 @@ void Menus::specificStockSwitch(sharedStock &stock, char &opt) {
           graphsManager.columnChart(stock->getPriceHistory());
           printInLanguage("Press 'enter' to continue\n",
                           "Pressione 'enter' para continuar\n");
-          sleep(1000ms);
+          sleep(100ms);
         }
       });
       stopGraphLoop = funcsManager.getSingleKey();
@@ -255,26 +255,21 @@ void Menus::fullPortifolioMenu() {
   char input{'/'};
   input = funcsManager.getSingleKey();
   if (input == '1') {
-    vector<double> portifolioHistoryVector;
-    auto tempStack = portifolioInstance.getPortifolioHistory();
-    if (tempStack.empty()) {
+    if (portifolioInstance.getPortifolioHistory().empty()) {
       printInLanguage("The portifolio is empty\n", "O portifolio está vazio\n");
       funcsManager.pressEnterToContinue();
       return;
-    }
-    while (!tempStack.empty()) {
-      portifolioHistoryVector.push_back(tempStack.top());
-      tempStack.pop();
     }
     char stopGraphLoop = '/';
     std::thread graphLoop([&]() {
       while (1) {
         if (stopGraphLoop == '\n')
           break;
-        graphsManager.columnChart(portifolioHistoryVector);
+        graphsManager.columnChart(portifolioInstance.getPortifolioHistory());
         printInLanguage("Press 'enter' to continue\n",
                         "Pressione 'enter' para continuar\n");
-        sleep(1000ms);
+        cout << std::flush;
+        sleep(100ms);
       }
     });
     stopGraphLoop = funcsManager.getSingleKey();

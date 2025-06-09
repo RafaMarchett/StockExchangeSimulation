@@ -13,6 +13,7 @@ template <typename T> struct dataValues {
 class Graphs {
 public:
   template <typename T> void columnChart(const vector<T> &);
+  template <typename T> void columnChart(std::stack<T> mainStack);
 
 private:
   int plotLine, barWidth, startColumn, graphRow, graphColumns;

@@ -2,9 +2,17 @@
 #include "Graphs.h"
 #include "SystemFunctions.h"
 
-// void Graphs::resetAllVars() { screen = {""}; }
+template <typename T> void Graphs::columnChart(std::stack<T> mainStack) {
+  vector<T> mainVec;
+  mainVec.reserve(mainStack.size());
+  while (!mainStack.empty()) {
+    mainVec.push_back(mainStack.top());
+    mainStack.pop();
+  }
+  columnChart(mainVec);
+}
 template <typename T> void Graphs::columnChart(const vector<T> &mainVec) {
-  // resetAllVars();
+  resetAllVars();
   plotLine = barWidth = startColumn = graphRow = graphColumns = 0;
   row = columns = leftPadding = mainVecSize = 0;
   screen = {""};
@@ -34,7 +42,7 @@ template <typename T> void Graphs::columnChart(const vector<T> &mainVec) {
 
   plotXAxisLabels(mainVec);
   cout << clear << '\n';
-  int counter{0};
+  size_t counter{0};
   for (auto &it : screen) {
     cout << it << (counter < row ? '\n' : ' ');
     counter++;

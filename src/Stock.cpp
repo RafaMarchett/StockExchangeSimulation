@@ -22,8 +22,17 @@ string Stock::getArrow() {
 }
 string Stock::getCompanyName() const { return _companyName; }
 
-Stock::Stock(double price, string ticker, string companyName,string sector)
-    : _price(price), _ticker(ticker), _companyName(companyName), _sector(sector) {}
+Stock::Stock(double price, string ticker, string companyName, string sector)
+    : _price(price), _ticker(ticker), _companyName(companyName) {
+  if (sector == "Clothing" || sector == "Research" || sector == "Technology" ||
+      sector == "Financial" || sector == "Retail" || sector == "Food" ||
+      sector == "Backrooms") {
+    _sector = sector;
+  } else {
+    std::cerr << "ERROR: Sector nonexistent\n";
+    exit(1);
+  }
+}
 
 void Stock::randomPriceUpdate() {
   srand(std::chrono::high_resolution_clock::now().time_since_epoch().count());
@@ -57,6 +66,4 @@ void Stock::setAllMembers(const _Stock::allMembers &inputStruct) {
   _sector = inputStruct._sector;
   priceHistory = inputStruct.priceHistory;
 }
-vector<double> Stock::getPriceHistory(){
-  return priceHistory;
-}
+vector<double> Stock::getPriceHistory() { return priceHistory; }

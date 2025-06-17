@@ -55,3 +55,11 @@ sharedStock Market::findTicker(const string &inputString) {
   else
     return nullptr;
 }
+void Market::applyMarketEvent(const string &inputSector) {
+  int bull_or_recessionMarket = rand() % 2;
+  for (auto &stock : allStocks) {
+    if (stock.second->getSector() == inputSector) {
+      // Mudar dinamica no change price da stock
+    }
+  }
+}

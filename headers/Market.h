@@ -27,6 +27,7 @@ public:
   void setStockOnScreen(bool);
   bool getStockOnScreen() const;
   sharedStock findTicker(const string &);
+  void applyMarketEvent(const string &);
 
   _Market::allMembers getAllMembers();
   void setAllMembers(const _Market::allMembers &);

@@ -25,6 +25,7 @@ public:
   void updateAllStocksPrice();
   inline void printAllStocks();
   size_t getNumberOfStocks();
+  vector<string> getAllSectors() const;
   void setStockOnScreen(bool);
   bool getStockOnScreen() const;
   sharedStock findTicker(const string &);

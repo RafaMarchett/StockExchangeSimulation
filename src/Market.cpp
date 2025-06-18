@@ -15,6 +15,7 @@ void Market::outputPointer_PrintStocks() {
   cout << moveUp << std::flush;
 }
 bool Market::getStockOnScreen() const { return stocksOnScreen; }
+vector<string> Market::getAllSectors() const { return allSectors; }
 void Market::setStockOnScreen(bool newState) { stocksOnScreen = newState; }
 size_t Market::getNumberOfStocks() { return _numberOfStocks; }
 

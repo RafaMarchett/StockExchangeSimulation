@@ -1,4 +1,3 @@
-#include "../headers/Graphs.h"
 #include "../headers/Market.h"
 #include "../headers/Menus.h"
 #include "../headers/Portifolio.h"
@@ -52,7 +51,6 @@ void mainLoop() {
 
     bool passTick = currentTimeMS - lastTickMS >= mainTick->getTickIntervalMS();
     if (passTick) {
-      // TICK LOGIC
       if (mainTick->getCurrentTick() % 10 == 0) {
         mainMarket->updateAllStocksPrice();
         mainPortifolio->updatePortifolioHistory();

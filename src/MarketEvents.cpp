@@ -3,6 +3,7 @@
 void marketEvents::generateRandomEvent() {
   int randomSeedEvent = (rand() % 100) + 1;
   if (randomSeedEvent < 10) {
+    // TODO: Aplicar evento...
     // NO MERCADO
     // Aplicar evento, recebe uma string com setor
     // Em todas as ações do setor, aplicar (positivo ou negativo)

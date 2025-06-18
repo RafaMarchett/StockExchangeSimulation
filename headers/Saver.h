@@ -36,8 +36,6 @@ private:
   void static readElement(std::ifstream &, std::stack<T> &);
   template <typename T> void static readElement(std::ifstream &, T &);
 
-  // template <IsMapLike mpType>
-  // void static readElement(std::ifstream &, mpType &);
   template <typename Key, typename Value>
   void static readElement(std::ifstream &, std::map<Key, Value> &);
   template <typename Key, typename Value>

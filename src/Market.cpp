@@ -17,6 +17,11 @@ void Market::outputPointer_PrintStocks() {
 bool Market::getStockOnScreen() const { return stocksOnScreen; }
 vector<string> Market::getAllSectors() const { return allSectors; }
 void Market::setStockOnScreen(bool newState) { stocksOnScreen = newState; }
+void Market::setAllSectors(const vector<string> &inputString) {
+  if (allSectors.empty()) {
+    allSectors = inputString;
+  }
+}
 size_t Market::getNumberOfStocks() { return _numberOfStocks; }
 
 Market &Market::getMarket() {

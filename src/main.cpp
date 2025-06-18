@@ -14,6 +14,10 @@ void firstInitialization(Market *&marketInstance, Tick *&tickInstance,
                          Portifolio *&portifolioInstance) {
   configureDouble();
   marketInstance = &Market::getMarket();
+  vector<string> allSectors = {"Clothing",  "Research", "Technology",
+                               "Financial", "Retail",   "Food",
+                               "Backrooms"};
+  marketInstance->setAllSectors(allSectors);
   vector<sharedStock> tempStocks = {
       make_shared<Stock>(30.42f, "RLS3", "Ralsey's Hat", "Clothing"),
       make_shared<Stock>(100.31f, "MEG3", "Major Explorer Group", "Research"),

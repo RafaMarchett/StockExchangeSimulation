@@ -22,16 +22,19 @@ string Stock::getArrow() {
 }
 string Stock::getCompanyName() const { return _companyName; }
 
-Stock::Stock(double price, string ticker, string companyName, string sector)
+Stock::Stock(double price, string ticker, string companyName,
+             string inputSector)
     : _price(price), _ticker(ticker), _companyName(companyName) {
-  if (sector == "Clothing" || sector == "Research" || sector == "Technology" ||
-      sector == "Financial" || sector == "Retail" || sector == "Food" ||
-      sector == "Backrooms") {
-    _sector = sector;
-  } else {
-    std::cerr << "ERROR: Sector nonexistent\n";
-    exit(1);
+  Market &marketInstance = Market::getMarket();
+  auto allSectors = marketInstance.getAllSectors();
+  for (auto &sector : allSectors) {
+    if (sector == inputSector) {
+      _sector = inputSector;
+      return;
+    }
   }
+  std::cerr << "ERROR: Sector nonexistent\n";
+  exit(1);
 }
 
 void Stock::randomPriceUpdate() {

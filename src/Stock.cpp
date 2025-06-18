@@ -35,8 +35,22 @@ Stock::Stock(double price, string ticker, string companyName, string sector)
 }
 
 void Stock::randomPriceUpdate() {
-  srand(std::chrono::high_resolution_clock::now().time_since_epoch().count());
-  double highOrDrop = (rand() % 2 == 0 ? -0.89 : 1.0);
+  Ternary a;
+  a = 0;
+  randomPriceUpdate(a);
+}
+
+void Stock::randomPriceUpdate(Ternary eventInMarket) {
+  double highOrDrop;
+  if (eventInMarket.get() == 0) {
+    highOrDrop = (rand() % 2 == 0 ? -0.89 : 1.0);
+  }
+  if (eventInMarket.get() == 1) {
+    highOrDrop = 1.0;
+  }
+  if (eventInMarket.get() == -1) {
+    highOrDrop = -0.89;
+  }
   double randNumber = ((rand() % 6) + 1);
 
   randNumber *= highOrDrop;

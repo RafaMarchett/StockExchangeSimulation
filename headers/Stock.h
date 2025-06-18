@@ -27,6 +27,7 @@ public:
   void setPrice(double);
   string getCompanyName() const;
   void randomPriceUpdate();
+  void randomPriceUpdate(Ternary);
   void printStockInMarket();
   string getArrow();
 

@@ -57,6 +57,20 @@ inline void printInLanguage(const string &string1, const string &string2) {
   cout << std::flush;
 }
 
+struct Ternary {
+  signed int value : 2;
+
+  void set(int input) {
+    if (input < -1 || input > 1) {
+      std::cerr << "Error, overflow of 'Ternary', the value " << input
+                << " is too large" << std::endl;
+    } else {
+      value = input;
+    }
+  }
+  signed int get() const { return value; }
+};
+
 inline void printPressEnter() {
   printInLanguage("Press 'Enter' to continue... ",
                   "Pressione 'Enter' para continuar... ");

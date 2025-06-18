@@ -41,12 +41,14 @@ _Market::allMembers Market::getAllMembers() {
   allMembers._numberOfStocks = _numberOfStocks;
   allMembers.stocksOnScreen = stocksOnScreen;
   allMembers.allStocks = allStocks;
+  allMembers.allSectors = allSectors;
   return allMembers;
 }
 void Market::setAllMembers(const _Market::allMembers &inputStruct) {
   stocksOnScreen = inputStruct.stocksOnScreen;
   _numberOfStocks = inputStruct._numberOfStocks;
   allStocks = inputStruct.allStocks;
+  allSectors = inputStruct.allSectors;
 }
 
 sharedStock Market::findTicker(const string &inputString) {
@@ -61,6 +63,7 @@ void Market::applyMarketEvent(const string &inputSector) {
   for (auto &stock : allStocks) {
     if (stock.second->getSector() == inputSector) {
       // TODO: Mudar dinamica no change price da stock
+      // Var event
     }
   }
 }

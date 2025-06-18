@@ -10,9 +10,10 @@ struct allMembers {
   bool stocksOnScreen;
   size_t _numberOfStocks{0};
   std::unordered_map<string, sharedStock> allStocks;
+  vector<string> allSectors;
 
   auto toTuple() {
-    return std::tie(stocksOnScreen, _numberOfStocks, allStocks);
+    return std::tie(stocksOnScreen, _numberOfStocks, allStocks, allSectors);
   }
 };
 } // namespace _Market
@@ -39,6 +40,7 @@ private:
   void outputPointer_PrintStocks();
   size_t _numberOfStocks{0};
   std::unordered_map<string, sharedStock> allStocks;
+  vector<string> allSectors;
 };
 
 #include "Stock.h"

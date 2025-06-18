@@ -1,41 +1,38 @@
 #include "../headers/MarketEvents.h"
+#include "../headers/Market.h"
 
+marketEvents &marketEvents::getMarketEvents() {
+  static marketEvents marketEventsInstance;
+  return marketEventsInstance;
+}
 _marketEvents::allMembers marketEvents::getAllMembers() {
   _marketEvents::allMembers allMembers;
-  allMembers.eventSector = eventSector;
+  allMembers.currentEventSector = currentEventSector;
   allMembers.eventTime = eventTime;
+  allMembers.bull_or_recessionMarket_value = bull_or_recessionMarket.get();
+  allMembers.bull_or_recessionMarket = allMembers.bull_or_recessionMarket_value;
 
   return allMembers;
 }
 void marketEvents::setAllMembers(const _marketEvents::allMembers &inputStruct) {
-  eventSector = inputStruct.eventSector;
+  currentEventSector = inputStruct.currentEventSector;
   eventTime = inputStruct.eventTime;
+  bull_or_recessionMarket = inputStruct.bull_or_recessionMarket_value;
 }
 void marketEvents::generateRandomEvent() {
   int randomSeedEvent = (rand() % 100) + 1;
-  if (randomSeedEvent < 50)
-  /*
-  if (randomSeedEvent < 10) {
-
-    // TODO: Aplicar evento...
-    // NO MERCADO
-    // Aplicar evento, recebe uma string com setor
-    // Em todas as ações do setor, aplicar (positivo ou negativo)
-    // Market::aplicarEvento("Clothing");
-  }
-  if (randomSeedEvent < 20) {
-    // aplly in market("Sector")
-  }
-  if (randomSeedEvent < 30) {
-  }
-  if (randomSeedEvent < 40) {
-  }
   if (randomSeedEvent < 50) {
+    currentEventSector = "";
+    return;
   }
-  if (randomSeedEvent < 60) {
+  Market &marketInstance = Market::getMarket();
+  vector<string> allSectors = marketInstance.getAllSectors();
+  int randomSector = rand() % allSectors.size();
+  bull_or_recessionMarket = rand() % 2 - 1;
+  eventTime = 300;
+  if (bull_or_recessionMarket.get() == 0) {
+    bull_or_recessionMarket = 1;
   }
-  if (randomSeedEvent < 70) {
-  } else {
-  }
-  */
+  currentEventSector = allSectors[randomSector];
+  return;
 }

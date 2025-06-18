@@ -60,6 +60,7 @@ inline void printInLanguage(const string &string1, const string &string2) {
 struct Ternary {
   signed int value : 2;
 
+  void operator=(signed int input) { set(input); }
   void set(int input) {
     if (input < -1 || input > 1) {
       std::cerr << "Error, overflow of 'Ternary', the value " << input

@@ -20,5 +20,6 @@ private:
   static void specificStock(sharedStock stock = nullptr);
   static void fullPortifolioMenu();
   static void allTransactionsMenu();
+  static void marketNoticesMenu();
 };
 #endif // MENUS

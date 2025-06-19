@@ -1,7 +1,6 @@
 #include "../headers/Market.h"
-#include "../headers/Menus.h"
+#include "../headers/MarketEvents.h"
 #include "../headers/Stock.h"
-#include "../headers/SystemFunctions.h"
 void Market::startMarket(vector<sharedStock> &tempStocks) {
   for (auto &stock : tempStocks) {
     if (!stock)
@@ -10,10 +9,6 @@ void Market::startMarket(vector<sharedStock> &tempStocks) {
   }
 }
 
-void Market::outputPointer_PrintStocks() {
-  string moveUp = "\x1B[" + std::to_string(getNumberOfStocks()) + "A";
-  cout << moveUp << std::flush;
-}
 bool Market::getStockOnScreen() const { return stocksOnScreen; }
 vector<string> Market::getAllSectors() const { return allSectors; }
 void Market::setStockOnScreen(bool newState) { stocksOnScreen = newState; }
@@ -30,8 +25,15 @@ Market &Market::getMarket() {
 }
 
 void Market::updateAllStocksPrice() {
-  for (auto &it : allStocks) {
-    it.second->randomPriceUpdate();
+  marketEvents &marketEventsInstance = marketEvents::getMarketEvents();
+  marketEventsInstance.generateRandomEvent();
+  for (auto &stock : allStocks) {
+    if (stock.second->getSector() ==
+        marketEventsInstance.getCurrentEventSector()) {
+      stock.second->randomPriceUpdate(
+          marketEventsInstance.getBull_or_recessionMarket());
+    }
+    stock.second->randomPriceUpdate();
   }
 }
 
@@ -62,14 +64,4 @@ sharedStock Market::findTicker(const string &inputString) {
     return allStocks.find(inputString)->second;
   else
     return nullptr;
-}
-
-void Market::applyMarketEvent(const string &inputSector) {
-  int bull_or_recessionMarket = rand() % 2;
-  for (auto &stock : allStocks) {
-    if (stock.second->getSector() == inputSector) {
-      // TODO: Mudar dinamica no change price da stock
-      // Var event
-    }
-  }
 }

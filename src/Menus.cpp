@@ -48,6 +48,10 @@ void Menus::homeMenuOptions(char input) {
     allTransactionsMenu();
     break;
   }
+  case '5': {
+    marketNoticesMenu();
+    break;
+  }
 
   default: {
     printInLanguage("\nInsert a valid option\n", "\nInsira uma opção válida\n");
@@ -63,10 +67,12 @@ void Menus::homeMenu() {
   printInLanguage(
       "Enter '1' to go to the \"Stock Market\" menu\nEnter '2' to go to the "
       "\"Single Stock\" menu\nEnter '3' to go to the \"Full Portifolio\" "
-      "menu\nEnter '4' to go to the \"All Transactions\" menu\n",
+      "menu\nEnter '4' to go to the \"All Transactions\" menu\nEnter '5' to go "
+      "to the \"Market News\" menu\n",
       "Insira '1' para ir ao menu \"Mercado de Ações\"\nInsira '2' para ir "
       "ao menu \"Ação única\"\nInsira '3' para ir ao menu \"Portifolio "
-      "Completo\"\nInsira '4' para ir ao menu \"Todas as Transações\"\n");
+      "Completo\"\nInsira '4' para ir ao menu \"Todas as Transações\"\nInsira "
+      "'5' para ir ao menu \"Noticias de Mercado\"\n");
 
   tempInput = SysFuncsManager.getSingleKey();
   homeMenuOptions(tempInput);
@@ -295,6 +301,7 @@ void Menus::marketNoticesMenu() {
   char stopNoticesLoop = '/';
   std::thread noticesLoop([&]() {
     while (1) {
+      cout << clear;
       if (stopNoticesLoop == '\n')
         break;
       if (marketEventsInstance.getBull_or_recessionMarket().get() == 0) {
@@ -313,7 +320,7 @@ void Menus::marketNoticesMenu() {
         cout << marketEventsInstance.getCurrentEventSector();
         printInLanguage("\" sector is in crisis", "\"  está em crise");
       }
-      cout << noBold;
+      cout << '\n' << noBold;
       printInLanguage("Press 'enter' to continue\n",
                       "Pressione 'enter' para continuar\n");
       cout << std::flush;

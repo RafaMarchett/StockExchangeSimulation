@@ -29,8 +29,14 @@ const string upArrow{"\033[32m▲\033[37m"}, downArrow{"\033[31m▼\033[37m"};
 
 const string fileName = "save.dat";
 
-inline static ostream &bold(ostream &manip) { return manip << "\033[1m"; }
+inline static ostream &bold(ostream &manip) {
+  return manip << "\033[37m\033[1m";
+}
 inline static ostream &noBold(ostream &manip) { return manip << "\033[0m"; }
+inline static ostream &greenOutput(ostream &manip) {
+  return manip << "\033[32m";
+}
+inline static ostream &redOutput(ostream &manip) { return manip << "\033[31m"; }
 inline static ostream &clear(ostream &manip) {
   return manip << "\033[2J" << "\033[H";
 }

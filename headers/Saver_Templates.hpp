@@ -86,20 +86,6 @@ void Saver::readElement(std::ifstream &File,
     inputMap[_key] = _value;
   }
 }
-// template <IsMapLike mpType>
-// void Saver::readElement(std::ifstream &File, mpType &inputMap) {
-//   size_t size{0};
-//   readElement(File, size);
-//   for (size_t i = 0; i < size; ++i) {
-//     using key = typename mpType::key_type;
-//     using value = typename mpType::mapped_type;
-//     key _key;
-//     value _value;
-//     readElement(File, _key);
-//     readElement(File, _value);
-//     inputMap[_key] = _value;
-//   }
-// }
 
 template <IsMapLike mpType>
 void Saver::saveElement(std::ofstream &File, mpType &inputMap) {

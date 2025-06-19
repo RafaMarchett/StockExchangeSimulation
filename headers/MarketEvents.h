@@ -20,8 +20,9 @@ struct allMembers {
 class marketEvents {
 public:
   void generateRandomEvent();
+  string getCurrentEventSector() const;
+  Ternary getBull_or_recessionMarket() const;
   static marketEvents &getMarketEvents();
-  void passTick();
 
   _marketEvents::allMembers getAllMembers();
   void setAllMembers(const _marketEvents::allMembers &);
@@ -31,6 +32,7 @@ private:
   string currentEventSector = "";
   unsigned eventTime = 0;
   Ternary bull_or_recessionMarket;
+  void passTick();
 };
 
 #endif // MARKETNEWS

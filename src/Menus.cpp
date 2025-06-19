@@ -290,3 +290,36 @@ void Menus::allTransactionsMenu() {
   }
   SysFuncsManager.pressEnterToContinue();
 }
+void Menus::marketNoticesMenu() {
+  marketEvents &marketEventsInstance = marketEvents::getMarketEvents();
+  char stopNoticesLoop = '/';
+  std::thread noticesLoop([&]() {
+    while (1) {
+      if (stopNoticesLoop == '\n')
+        break;
+      if (marketEventsInstance.getBull_or_recessionMarket().get() == 0) {
+        cout << bold;
+        printInLanguage("No unusual events are happening in the market\n",
+                        "Nenhum evento atípico está acontecendo no mercado\n");
+      } else if (marketEventsInstance.getBull_or_recessionMarket().get() == 1) {
+        cout << bold << greenOutput;
+        printInLanguage("The \"", "O setor \"");
+        cout << marketEventsInstance.getCurrentEventSector();
+        printInLanguage("\" sector is booming", "\"  está em alta");
+      } else if (marketEventsInstance.getBull_or_recessionMarket().get() ==
+                 -1) {
+        cout << bold << redOutput;
+        printInLanguage("The \"", "O setor \"");
+        cout << marketEventsInstance.getCurrentEventSector();
+        printInLanguage("\" sector is in crisis", "\"  está em crise");
+      }
+      cout << noBold;
+      printInLanguage("Press 'enter' to continue\n",
+                      "Pressione 'enter' para continuar\n");
+      cout << std::flush;
+      sleep(100ms);
+    }
+  });
+  stopNoticesLoop = SysFuncsManager.getSingleKey();
+  noticesLoop.join();
+}

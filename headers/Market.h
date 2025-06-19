@@ -30,7 +30,6 @@ public:
   void setAllSectors(const vector<string> &);
   bool getStockOnScreen() const;
   sharedStock findTicker(const string &);
-  void applyMarketEvent(const string &);
 
   _Market::allMembers getAllMembers();
   void setAllMembers(const _Market::allMembers &);

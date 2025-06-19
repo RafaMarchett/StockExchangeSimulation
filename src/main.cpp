@@ -1,4 +1,5 @@
 #include "../headers/Market.h"
+#include "../headers/MarketEvents.h"
 #include "../headers/Menus.h"
 #include "../headers/Portifolio.h"
 #include "../headers/Saver.h"
@@ -38,10 +39,12 @@ void firstInitialization(Market *&marketInstance, Tick *&tickInstance,
 }
 void loadInitialization(Market *&marketInstance, Tick *&tickInstance,
                         Portifolio *&portifolioInstance) {
+  marketEvents *marketEvents = &marketEvents::getMarketEvents();
   Market marketInstance2 = *marketInstance;
   Tick tickInstance2 = *tickInstance;
   Portifolio portifolioInstance2 = *portifolioInstance;
-  Saver::readAllClasses(marketInstance2, tickInstance2, portifolioInstance2);
+  Saver::readAllClasses(marketInstance2, tickInstance2, portifolioInstance2,
+                        marketEvents);
 }
 void mainLoop() {
   size_t lastTickMS = mainTick->getCurrentTimeMS();

@@ -1,10 +1,12 @@
 #include "../headers/Menus.h"
 #include "../headers/Graphs.h"
 #include "../headers/Market.h"
+#include "../headers/MarketEvents.h"
 #include "../headers/Portifolio.h"
 #include "../headers/SystemFunctions.h"
 #include "../headers/Tick.h"
 inline std::atomic<bool> isLoop{false};
+SysFuncs SysFuncsManager;
 Menus::Menus() {}
 void Menus::changeStockOnScreen(bool newState) {
   Market &tempMarket = Market::getMarket();
@@ -13,7 +15,6 @@ void Menus::changeStockOnScreen(bool newState) {
 
 void Menus::firstInitialization() {
   char opt{'/'};
-  SysFuncs SysFuncsManager;
   cout << clear;
   changeStockOnScreen(false);
   do {
@@ -57,7 +58,6 @@ void Menus::homeMenuOptions(char input) {
 
 void Menus::homeMenu() {
   changeStockOnScreen(false);
-  SysFuncs SysFuncsManager;
   char tempInput{'/'};
   cout << clear;
   printInLanguage(
@@ -90,13 +90,11 @@ void Menus::allStocksMenu() {
 }
 
 void Menus::inputToLoop() {
-  SysFuncs funcsManager;
-  funcsManager.pressEnterToContinue();
+  SysFuncsManager.pressEnterToContinue();
   isLoop = false;
 }
 
 void Menus::specificStock(sharedStock stock) {
-  SysFuncs funcsManager;
   string inputTicker;
   auto &mkt = Market::getMarket();
   cout << clear;
@@ -143,7 +141,6 @@ void Menus::specificStock(sharedStock stock) {
 }
 
 void Menus::specificStockSwitch(sharedStock &stock, char &opt) {
-  SysFuncs funcsManager;
   Portifolio &userPortifolio = Portifolio::getPortifolio();
   if (!isLoop) {
     switch (opt) {
@@ -157,7 +154,7 @@ void Menus::specificStockSwitch(sharedStock &stock, char &opt) {
         stockQuantity = 0;
         cin.clear();
         printInLanguage("Enter an valid value\n", "Insira um valor válido\n");
-        funcsManager.pressEnterToContinue();
+        SysFuncsManager.pressEnterToContinue();
         return;
       }
       if (stockQuantity >= 0)
@@ -176,13 +173,11 @@ void Menus::specificStockSwitch(sharedStock &stock, char &opt) {
                  << stock->getTicker() << " saindo cada uma por "
                  << stock->getPrice() << "\nNo total ficou "
                  << stock->getPrice() * stockQuantity << '\n';
-            SysFuncs funcsManager;
-            funcsManager.pressEnterToContinue();
+            SysFuncsManager.pressEnterToContinue();
           } else
             exit(2);
           cin.clear();
-          SysFuncs funcsManager;
-          funcsManager.pressEnterToContinue();
+          SysFuncsManager.pressEnterToContinue();
         } else {
           userPortifolio.sellStock(stock, stockQuantity);
           if ((stock->getPrice() * stockQuantity) <=
@@ -201,14 +196,13 @@ void Menus::specificStockSwitch(sharedStock &stock, char &opt) {
           } else
             exit(2);
           cin.clear();
-          SysFuncs funcsManager;
-          funcsManager.pressEnterToContinue();
+          SysFuncsManager.pressEnterToContinue();
         }
       else {
         printInLanguage(
             "Cannot buy negative quantity of stocks\n",
             "Impossivel comprar uma quantidade negativa de ações\n");
-        funcsManager.pressEnterToContinue();
+        SysFuncsManager.pressEnterToContinue();
       }
       break;
     }
@@ -225,7 +219,7 @@ void Menus::specificStockSwitch(sharedStock &stock, char &opt) {
           sleep(100ms);
         }
       });
-      stopGraphLoop = funcsManager.getSingleKey();
+      stopGraphLoop = SysFuncsManager.getSingleKey();
       graphLoop.join();
       specificStock(stock);
       break;
@@ -236,7 +230,7 @@ void Menus::specificStockSwitch(sharedStock &stock, char &opt) {
     }
     default: {
       printInLanguage("Invalid key\n", "Chave inválida\n");
-      funcsManager.pressEnterToContinue();
+      SysFuncsManager.pressEnterToContinue();
       break;
     }
     }
@@ -245,7 +239,6 @@ void Menus::specificStockSwitch(sharedStock &stock, char &opt) {
 
 void Menus::fullPortifolioMenu() {
   Graphs graphsManager;
-  SysFuncs funcsManager;
   Portifolio &portifolioInstance = Portifolio::getPortifolio();
   portifolioInstance.printFullPortifolio();
   printInLanguage("Insert '1' to se the wealth evolution chart or \n press "
@@ -253,11 +246,11 @@ void Menus::fullPortifolioMenu() {
                   "Insira '1' para ver o grafico de evolução patrimonial, ou "
                   "\npressione 'Enter' para continuar\n");
   char input{'/'};
-  input = funcsManager.getSingleKey();
+  input = SysFuncsManager.getSingleKey();
   if (input == '1') {
     if (portifolioInstance.getPortifolioHistory().empty()) {
       printInLanguage("The portifolio is empty\n", "O portifolio está vazio\n");
-      funcsManager.pressEnterToContinue();
+      SysFuncsManager.pressEnterToContinue();
       return;
     }
     char stopGraphLoop = '/';
@@ -272,7 +265,7 @@ void Menus::fullPortifolioMenu() {
         sleep(100ms);
       }
     });
-    stopGraphLoop = funcsManager.getSingleKey();
+    stopGraphLoop = SysFuncsManager.getSingleKey();
     graphLoop.join();
     fullPortifolioMenu();
   }
@@ -281,15 +274,13 @@ void Menus::fullPortifolioMenu() {
 }
 
 void Menus::enterSingleChar(char &input) {
-  SysFuncs funcsManager;
-  char temp = funcsManager.getSingleKey();
+  char temp = SysFuncsManager.getSingleKey();
   isLoop = false;
   input = temp;
 }
 
 void Menus::allTransactionsMenu() {
   Portifolio &portifolioInstance = Portifolio::getPortifolio();
-  SysFuncs funcsManager;
   const auto &allTransactions = portifolioInstance.getAllTransactions();
   cout << clear;
   for (const auto &transaction : allTransactions) {
@@ -297,5 +288,5 @@ void Menus::allTransactionsMenu() {
     printInLanguage("transaction: ", "transação: ");
     transaction.second.printTransaction();
   }
-  funcsManager.pressEnterToContinue();
+  SysFuncsManager.pressEnterToContinue();
 }

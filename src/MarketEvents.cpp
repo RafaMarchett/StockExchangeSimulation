@@ -40,7 +40,7 @@ void marketEvents::generateRandomEvent() {
     vector<string> allSectors = marketInstance.getAllSectors();
     int randomSector = rand() % allSectors.size();
     bull_or_recessionMarket = rand() % 2 - 1;
-    eventTime = 300;
+    eventTime = 30;
     if (bull_or_recessionMarket.get() == 0) {
       bull_or_recessionMarket = 1;
     }

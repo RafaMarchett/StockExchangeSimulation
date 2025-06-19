@@ -49,10 +49,10 @@ void Stock::randomPriceUpdate(Ternary eventInMarket) {
     highOrDrop = (rand() % 2 == 0 ? -0.89 : 1.0);
   }
   if (eventInMarket.get() == 1) {
-    highOrDrop = 1.0;
+    highOrDrop = 1.1;
   }
   if (eventInMarket.get() == -1) {
-    highOrDrop = -0.89;
+    highOrDrop = -0.925;
   }
   double randNumber = ((rand() % 6) + 1);
 

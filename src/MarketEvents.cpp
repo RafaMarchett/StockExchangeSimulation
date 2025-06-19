@@ -36,3 +36,7 @@ void marketEvents::generateRandomEvent() {
   currentEventSector = allSectors[randomSector];
   return;
 }
+void marketEvents::passTick() {
+  if (eventTime > 0)
+    eventTime--;
+}

@@ -21,6 +21,7 @@ class marketEvents {
 public:
   void generateRandomEvent();
   static marketEvents &getMarketEvents();
+  void passTick();
 
   _marketEvents::allMembers getAllMembers();
   void setAllMembers(const _marketEvents::allMembers &);

@@ -9,6 +9,7 @@ size_t Tick::getCurrentTimeMS() const {
   return duration_cast<milliseconds>(system_clock::now().time_since_epoch())
       .count();
 }
+bool Tick::getProgramIsRunning() const { return programIsRunning; }
 
 size_t Tick::getCurrentTick() const { return currentTick; }
 void Tick::incrementTick() { currentTick++; }

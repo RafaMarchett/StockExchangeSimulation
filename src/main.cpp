@@ -50,6 +50,10 @@ void mainLoop() {
   size_t lastTickMS = mainTick->getCurrentTimeMS();
 
   while (1) {
+    if (mainTick->getProgramIsRunning()) {
+      sleep(std::chrono::seconds(5));
+      break;
+    }
     size_t currentTimeMS = mainTick->getCurrentTimeMS();
 
     bool passTick = currentTimeMS - lastTickMS >= mainTick->getTickIntervalMS();
@@ -80,7 +84,6 @@ int main(int agrc, char *argv[]) {
   else
     loadInitialization(mainMarket, mainTick,
                        mainPortifolio); // Load File
-  std::jthread currentMenu(Menus::homeMenu);
   mainLoop();
   return 0;
 }

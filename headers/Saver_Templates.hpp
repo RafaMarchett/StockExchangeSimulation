@@ -24,7 +24,7 @@ void Saver::saveElement(std::ofstream &File, std::stack<T> &inputStack) {
   saveElement(File, size);
   std::stack<T> tempStack = inputStack;
   while (!tempStack.empty()) {
-    saveElement(tempStack.top());
+    saveElement(File, tempStack.top());
     tempStack.pop();
   }
 }
@@ -61,6 +61,33 @@ template <typename T> void Saver::readElement(std::ifstream &File, T &input) {
 }
 
 template <typename Key, typename Value>
+void Saver::saveElement(std::ofstream &File, std::map<Key, Value> &inputMap) {
+  size_t size{0};
+  saveElement(File, size);
+  for (size_t i = 0; i < size; ++i) {
+    Key _key;
+    Value _value;
+    saveElement(File, _key);
+    saveElement(File, _value);
+    inputMap[_key] = _value;
+  }
+}
+template <typename Key, typename Value>
+void Saver::saveElement(std::ofstream &File,
+                        std::unordered_map<Key, Value> &inputMap) {
+
+  size_t size{0};
+  saveElement(File, size);
+  for (size_t i = 0; i < size; ++i) {
+    Key _key;
+    Value _value;
+    saveElement(File, _key);
+    saveElement(File, _value);
+    inputMap[_key] = _value;
+  }
+}
+
+template <typename Key, typename Value>
 void Saver::readElement(std::ifstream &File, std::map<Key, Value> &inputMap) {
   size_t size{0};
   readElement(File, size);
@@ -84,16 +111,6 @@ void Saver::readElement(std::ifstream &File,
     readElement(File, _key);
     readElement(File, _value);
     inputMap[_key] = _value;
-  }
-}
-
-template <IsMapLike mpType>
-void Saver::saveElement(std::ofstream &File, mpType &inputMap) {
-  size_t size{0};
-  saveElement(File, size);
-  for (const auto &pair : inputMap) {
-    saveElement(File, pair.first);
-    saveElement(File, pair.second);
   }
 }
 
@@ -138,6 +155,7 @@ void Saver::readElement(std::ifstream &File, T &inputStruct) {
 }
 
 template <typename... Args> void Saver::saveAllClasses(Args &&...args) {
+  truncFile();
   ((saveClass(std::forward<Args>(args)), ...));
 }
 template <typename... Args> void Saver::readAllClasses(Args &&...args) {

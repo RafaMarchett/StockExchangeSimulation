@@ -22,9 +22,14 @@ private:
 
   template <IsStruct T> static void saveElement(std::ofstream &, T &);
   template <IsStruct T>
+
   static void saveElement(std::ofstream &, shared_ptr<T> &);
-  template <IsMapLike mpType>
-  void static saveElement(std::ofstream &, mpType &);
+  template <typename Key, typename Value>
+  static void saveElement(std::ofstream &File, std::map<Key, Value> &inputMap);
+
+  template <typename Key, typename Value>
+  static void saveElement(std::ofstream &File,
+                          std::unordered_map<Key, Value> &inputMap);
 
   void static saveElement(std::ofstream &, string &);
   std::ofstream static saveFile();

@@ -39,20 +39,19 @@ void firstInitialization(Market *&marketInstance, Tick *&tickInstance,
 }
 void loadInitialization(Market *&marketInstance, Tick *&tickInstance,
                         Portifolio *&portifolioInstance) {
-  marketEvents *marketEvents = &marketEvents::getMarketEvents();
   Market marketInstance2 = *marketInstance;
   Tick tickInstance2 = *tickInstance;
   Portifolio portifolioInstance2 = *portifolioInstance;
   Saver::readAllClasses(marketInstance2, tickInstance2, portifolioInstance2,
-                        marketEvents);
+                        marketEvents::getMarketEvents());
 }
 void mainLoop() {
   size_t lastTickMS = mainTick->getCurrentTimeMS();
 
   while (1) {
-    if (mainTick->getProgramIsRunning()) {
-      sleep(std::chrono::seconds(5));
-      break;
+    if (!mainTick->getProgramIsRunning()) {
+      sleep(std::chrono::seconds(1));
+      exit(0);
     }
     size_t currentTimeMS = mainTick->getCurrentTimeMS();
 
@@ -63,7 +62,7 @@ void mainLoop() {
         mainPortifolio->updatePortifolioHistory();
       }
       if (mainTick->getCurrentTick() % 250 == 0) {
-        Saver::saveAllClasses(mainMarket, mainTick, mainPortifolio,
+        Saver::saveAllClasses(*mainMarket, *mainTick, *mainPortifolio,
                               marketEvents::getMarketEvents());
       }
       mainTick->incrementTick();
@@ -84,6 +83,7 @@ int main(int agrc, char *argv[]) {
   else
     loadInitialization(mainMarket, mainTick,
                        mainPortifolio); // Load File
+  std::jthread currentMenu(Menus::homeMenu);
   mainLoop();
   return 0;
 }

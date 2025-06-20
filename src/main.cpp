@@ -58,7 +58,10 @@ void mainLoop() {
         mainMarket->updateAllStocksPrice();
         mainPortifolio->updatePortifolioHistory();
       }
-
+      if (mainTick->getCurrentTick() % 250 == 0) {
+        Saver::saveAllClasses(mainMarket, mainTick, mainPortifolio,
+                              marketEvents::getMarketEvents());
+      }
       mainTick->incrementTick();
       lastTickMS = currentTimeMS;
     }

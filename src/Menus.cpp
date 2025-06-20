@@ -336,4 +336,7 @@ void Menus::saveAndExit() {
                         Portifolio::getPortifolio(),
                         marketEvents::getMarketEvents());
   Tick::getInstance().endProgram();
+  cout << clear << bold << greenOutput;
+  printInLanguage("Saving and exiting\n", "Salvando e saindo");
+  cout << noBold;
 }

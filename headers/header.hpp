@@ -83,8 +83,12 @@ inline void printPressEnter() {
                   "Pressione 'Enter' para continuar... ");
 }
 
-template <typename ABC>
-concept IsStruct = std::is_class_v<ABC>;
+template <typename T>
+concept HasToTuple = requires(T a) {
+  { a.toTuple() };
+};
+template <typename T>
+concept IsStruct = std::is_class_v<T> && HasToTuple<T>;
 
 template <typename T>
 concept IsMapLike = requires(T mp) {

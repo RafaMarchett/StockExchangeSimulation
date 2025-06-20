@@ -3,6 +3,7 @@
 #include "../headers/Market.h"
 #include "../headers/MarketEvents.h"
 #include "../headers/Portifolio.h"
+#include "../headers/Saver.h"
 #include "../headers/SystemFunctions.h"
 #include "../headers/Tick.h"
 inline std::atomic<bool> isLoop{false};
@@ -329,4 +330,10 @@ void Menus::marketNoticesMenu() {
   });
   stopNoticesLoop = SysFuncsManager.getSingleKey();
   noticesLoop.join();
+}
+void Menus::saveAndExit() {
+  Saver::saveAllClasses(Market::getMarket(), Tick::getInstance(),
+                        Portifolio::getPortifolio(),
+                        marketEvents::getMarketEvents());
+  Tick::getInstance().endProgram();
 }

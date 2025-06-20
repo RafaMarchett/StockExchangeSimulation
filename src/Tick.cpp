@@ -21,3 +21,4 @@ _Tick::allMembers Tick::getAllMembers() {
 void Tick::setAllMembers(_Tick::allMembers inputStruct) {
   currentTick = inputStruct.currentTick;
 }
+void Tick::endProgram() { programIsRunning = 0; }

@@ -22,6 +22,7 @@ public:
   static Tick &getInstance();
   size_t getCurrentTick() const;
   void incrementTick();
+  void endProgram();
 
   _Tick::allMembers getAllMembers();
   void setAllMembers(_Tick::allMembers);
@@ -30,6 +31,7 @@ private:
   Tick() = default;
   const size_t tickIntervalMS{100};
   size_t currentTick{0};
+  bool programIsRunning = 1; // DONT SAVE
 };
 
 #endif // TICK

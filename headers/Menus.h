@@ -21,5 +21,6 @@ private:
   static void fullPortifolioMenu();
   static void allTransactionsMenu();
   static void marketNoticesMenu();
+  static void saveAndExit();
 };
 #endif // MENUS

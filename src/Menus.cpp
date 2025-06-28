@@ -15,20 +15,8 @@ void Menus::changeStockOnScreen(bool newState) {
 }
 
 void Menus::firstInitialization() {
-  char opt{'/'};
-  cout << clear;
   changeStockOnScreen(false);
-  do {
-    cout << "\nEnter 1 for English\n"
-         << "Insira 2 para Portugues\n>>> " << std::flush;
-    opt = SysFuncsManager.getSingleKey();
-    if (opt == '1' || opt == '2') {
-      language = opt;
-      break;
-    }
-    cout << clear << "\nEnter a valid option\nInsira uma opção válida\n"
-         << std::flush;
-  } while (1);
+  initializeLanguage();
 }
 
 void Menus::homeMenuOptions(char input) {
@@ -166,25 +154,29 @@ void Menus::specificStockSwitch(sharedStock &stock, char &opt) {
       }
       if (stockQuantity >= 0)
         if (opt == '1') {
-          userPortifolio.buyStock(stock, stockQuantity);
           if ((stock->getPrice() * stockQuantity) >
-              userPortifolio.get_MoneyInAccount())
+              userPortifolio.get_MoneyInAccount()) {
             return;
+          }
+          userPortifolio.buyStock(stock, stockQuantity);
           if (language == '1') {
             cout << stockQuantity << stock->getTicker()
                  << " stocks were purshased, each coasting "
                  << stock->getPrice() << "\nIn total, the cost was $"
                  << stock->getPrice() * stockQuantity << '\n';
+            SysFuncsManager.pressEnterToContinue();
           } else if (language == '2') {
             cout << "Foram compradas " << stockQuantity << " ações "
                  << stock->getTicker() << " saindo cada uma por "
                  << stock->getPrice() << "\nNo total ficou "
                  << stock->getPrice() * stockQuantity << '\n';
             SysFuncsManager.pressEnterToContinue();
-          } else
-            exit(2);
+          } else {
+            // std::cerr << "Error in Language select\n";
+            initializeLanguage();
+            // exit(LANGUAGE_NOT_FIND);
+          }
           cin.clear();
-          SysFuncsManager.pressEnterToContinue();
         } else {
           userPortifolio.sellStock(stock, stockQuantity);
           if ((stock->getPrice() * stockQuantity) <=
@@ -200,8 +192,11 @@ void Menus::specificStockSwitch(sharedStock &stock, char &opt) {
                  << stock->getTicker() << " saindo cada uma por R$"
                  << stock->getPrice() << "\nNo total ficou R$"
                  << stock->getPrice() * stockQuantity << '\n';
-          } else
-            exit(2);
+          } else {
+            // std::cerr << "Error in Language select\n";
+            initializeLanguage();
+            // exit(LANGUAGE_NOT_FIND);
+          }
           cin.clear();
           SysFuncsManager.pressEnterToContinue();
         }

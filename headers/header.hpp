@@ -53,15 +53,8 @@ template <typename T> inline static void inputIgnore(T &input) {
   cin.ignore(10000, '\n');
 }
 
-inline void printInLanguage(const string &string1, const string &string2) {
-  if (language == '1') {
-    cout << string1;
-  } else if (language == '2') {
-    cout << string2;
-  } else
-    exit(LANGUAGE_NOT_FIND);
-  cout << std::flush;
-}
+void initializeLanguage();
+void printInLanguage(const string &string1, const string &string2);
 
 struct Ternary {
   signed int value : 2;
@@ -91,10 +84,15 @@ template <typename T>
 concept IsStruct = std::is_class_v<T> && HasToTuple<T>;
 
 template <typename T>
+concept IsClass = std::is_class_v<T>;
+
+template <typename T>
 concept IsMapLike = requires(T mp) {
   typename T::key_type;
   typename T::mapped_type;
   { mp.begin() } -> std::input_or_output_iterator;
   { mp.end() } -> std::input_or_output_iterator;
 };
+template <typename T>
+concept IsTrivial = std::is_trivially_copyable_v<T> && !std::is_class_v<T>;
 #endif // HEADER_HPP

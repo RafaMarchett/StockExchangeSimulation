@@ -93,9 +93,14 @@ void Portifolio::sellStock(const sharedStock &selledStock,
   if (stocksInPortifolio != fullPortifolio.end() &&
       stocksInPortifolio->second.totalStocks >= stockCounter) {
     stocksInPortifolio->second.totalStocks -= stockCounter;
+    if (stocksInPortifolio->second.totalStocks == 0) {
+      fullPortifolio.erase(selledStock->getTicker());
+      stockHistoryInPortifolio.erase(selledStock->getTicker());
+    }
     calculateTotalParticipation(selledStock);
     _moneyInAccount += stockPrice * stockCounter;
     newTransaction(selledStock->getTicker(), stockPrice, stockCounter, false);
+    updatePortifolioHistory();
   } else {
     printInLanguage("You don't have enough stocks to sell",
                     "Você não possuí ações suficientes para vender\n");

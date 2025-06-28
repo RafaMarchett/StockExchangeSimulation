@@ -5,6 +5,7 @@
 #include "../headers/Saver.h"
 #include "../headers/Tick.h"
 #include "../headers/header.hpp"
+#include <csignal>
 
 Tick *mainTick = nullptr;
 Portifolio *mainPortifolio = nullptr;
@@ -12,7 +13,6 @@ Market *mainMarket = nullptr;
 
 void firstInitialization(Market *&marketInstance, Tick *&tickInstance,
                          Portifolio *&portifolioInstance) {
-  configureDouble();
   marketInstance = &Market::getMarket();
   vector<string> allSectors = {"Clothing",  "Research", "Technology",
                                "Financial", "Retail",   "Food",
@@ -39,15 +39,16 @@ void firstInitialization(Market *&marketInstance, Tick *&tickInstance,
 }
 void loadInitialization(Market *&marketInstance, Tick *&tickInstance,
                         Portifolio *&portifolioInstance) {
-  Market marketInstance2 = *marketInstance;
-  Tick tickInstance2 = *tickInstance;
-  Portifolio portifolioInstance2 = *portifolioInstance;
-  Saver::readAllClasses(marketInstance2, tickInstance2, portifolioInstance2,
+  marketInstance = &Market::getMarket();
+  tickInstance = &Tick::getInstance();
+  portifolioInstance = &Portifolio::getPortifolio();
+  Saver::readAllClasses(Market::getMarket(), Tick::getInstance(),
+                        Portifolio::getPortifolio(),
                         marketEvents::getMarketEvents());
+  initializeLanguage();
 }
 void mainLoop() {
   size_t lastTickMS = mainTick->getCurrentTimeMS();
-
   while (1) {
     if (!mainTick->getProgramIsRunning()) {
       sleep(std::chrono::seconds(1));
@@ -74,15 +75,26 @@ void mainLoop() {
   }
 }
 
+void stopProgram(int signal) {
+  Saver::saveAllClasses(*mainMarket, *mainTick, *mainPortifolio,
+                        marketEvents::getMarketEvents());
+  exit(0);
+}
+
 int main(int agrc, char *argv[]) {
+  configureDouble();
+  std::signal(SIGINT, stopProgram);
   srand(std::chrono::high_resolution_clock::now().time_since_epoch().count());
   std::fstream File(fileName, std::ios::in | std::ios::ate);
-  if (!File || File.tellg() == 0)
+  if (!File || File.tellg() == 0) {
+    File.close();
     firstInitialization(mainMarket, mainTick,
                         mainPortifolio); // New firstInitialization
-  else
-    loadInitialization(mainMarket, mainTick,
-                       mainPortifolio); // Load File
+  } else {
+    File.close();
+    loadInitialization(mainMarket, mainTick, mainPortifolio);
+  } // Load File
+
   std::jthread currentMenu(Menus::homeMenu);
   mainLoop();
   return 0;

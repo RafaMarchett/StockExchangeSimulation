@@ -132,35 +132,6 @@ void Saver::readElement(std::ifstream &File,
     inputMap[_key] = _value;
   }
 }
-// template <typename Key, typename Value>
-// void Saver::saveElement( // CHECAR
-//     std::ofstream &File,
-//     std::unordered_map<Key, std::shared_ptr<Value>> &inputMap) {
-//   size_t size = inputMap.size();
-//   saveElement(File, size);
-//   for (auto &[key, ptr] : inputMap) {
-//     saveElement(File, key);
-//     saveElement(File, *ptr);
-//   }
-// }
-// template <typename Key, typename Value>
-// void Saver::readElement(
-//     std::ifstream &File,
-//     std::unordered_map<Key, std::shared_ptr<Value>> &inputMap) { // CHECAR
-//   size_t size = 0;
-//   readElement(File, size);
-//   if (size > 1000000) {
-//     std::cerr << "Error reading unordered_map size\n";
-//     exit(READ_ERROR);
-//   }
-//   for (size_t i = 0; i < size; ++i) {
-//     Key key;
-//     Value value;
-//     readElement(File, key);
-//     readElement(File, value);
-//     inputMap[key] = std::make_shared<Value>(value);
-//   }
-// }
 
 template <typename T>
 void Saver::saveClass(std::ofstream &File, T &inputClass) {

@@ -172,9 +172,7 @@ void Menus::specificStockSwitch(sharedStock &stock, char &opt) {
                  << stock->getPrice() * stockQuantity << '\n';
             SysFuncsManager.pressEnterToContinue();
           } else {
-            // std::cerr << "Error in Language select\n";
             initializeLanguage();
-            // exit(LANGUAGE_NOT_FIND);
           }
           cin.clear();
         } else {
@@ -193,9 +191,7 @@ void Menus::specificStockSwitch(sharedStock &stock, char &opt) {
                  << stock->getPrice() << "\nNo total ficou R$"
                  << stock->getPrice() * stockQuantity << '\n';
           } else {
-            // std::cerr << "Error in Language select\n";
             initializeLanguage();
-            // exit(LANGUAGE_NOT_FIND);
           }
           cin.clear();
           SysFuncsManager.pressEnterToContinue();

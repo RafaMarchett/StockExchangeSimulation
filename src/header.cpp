@@ -24,7 +24,6 @@ void printInLanguage(const string &string1, const string &string2) {
     cout << string2;
   } else {
     initializeLanguage();
-    // exit(LANGUAGE_NOT_FIND);
   }
   cout << std::flush;
 }

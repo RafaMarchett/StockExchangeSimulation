@@ -32,14 +32,6 @@ private:
   template <typename Key, typename Value>
   static void saveElement(std::ofstream &File,
                           std::unordered_map<Key, Value> &inputMap);
-  // template <typename Key, typename Value>
-  // static void
-  // saveElement(std::ofstream &File,
-  //             std::unordered_map<Key, std::shared_ptr<Value>> &inputMap);
-  // template <typename Key, typename Value>
-  // static void
-  // readElement(std::ifstream &File,
-  //             std::unordered_map<Key, std::shared_ptr<Value>> &inputMap);
   std::ofstream static saveFile();
   std::ifstream static readFile();
 

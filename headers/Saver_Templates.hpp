@@ -1,5 +1,7 @@
 #pragma once
 #include "Saver.h"
+#include <memory>
+#define READ_ERROR 11
 
 template <typename T, typename Func, std::size_t... Is>
 void Saver::forEachImpl(T &&t, Func fn, std::index_sequence<Is...>) {
@@ -15,7 +17,9 @@ template <typename T>
 void Saver::saveElement(std::ofstream &File, vector<T> &inputVector) {
   size_t size = inputVector.size();
   saveElement(File, size);
-  File.write(reinterpret_cast<char *>(inputVector.data()), size * sizeof(T));
+  for (auto &element : inputVector) {
+    saveElement(File, element);
+  }
 }
 
 template <typename T>
@@ -29,21 +33,33 @@ void Saver::saveElement(std::ofstream &File, std::stack<T> &inputStack) {
   }
 }
 
-template <typename T> void Saver::saveElement(std::ofstream &File, T &input) {
-  File.write(reinterpret_cast<char *>(&input), sizeof(input));
+template <IsTrivial T> void Saver::saveElement(std::ofstream &File, T &input) {
+  File.write(reinterpret_cast<const char *>(&input), sizeof(input));
 }
 
 template <typename T>
 void Saver::readElement(std::ifstream &File, vector<T> &inputVector) {
-  size_t size = inputVector.size();
+  size_t size = 0;
   readElement(File, size);
-  File.read(reinterpret_cast<char *>(inputVector.data()), size * sizeof(T));
+  if (size > 1000000) {
+    std::cerr << "Error in read size of vector. Received: " << size
+              << std::endl;
+    exit(READ_ERROR);
+  }
+  inputVector.resize(size);
+  for (size_t i = 0; i < size; ++i) {
+    readElement(File, inputVector[i]);
+  }
 }
 
 template <typename T>
 void Saver::readElement(std::ifstream &File, std::stack<T> &inputStack) {
   size_t size{0};
   readElement(File, size);
+  if (size > 1000000) {
+    std::cerr << "Error in read size of stack. Received: " << size << std::endl;
+    exit(READ_ERROR);
+  }
   for (size_t i = 0; i < size; i++) {
     T element;
     readElement(File, element);
@@ -56,34 +72,28 @@ void Saver::readElement(std::ifstream &File, std::stack<T> &inputStack) {
   }
   inputStack = reversedStack;
 }
-template <typename T> void Saver::readElement(std::ifstream &File, T &input) {
+template <IsTrivial T> void Saver::readElement(std::ifstream &File, T &input) {
   File.read(reinterpret_cast<char *>(&input), sizeof(input));
 }
 
 template <typename Key, typename Value>
 void Saver::saveElement(std::ofstream &File, std::map<Key, Value> &inputMap) {
-  size_t size{0};
+  size_t size = inputMap.size();
   saveElement(File, size);
-  for (size_t i = 0; i < size; ++i) {
-    Key _key;
-    Value _value;
-    saveElement(File, _key);
-    saveElement(File, _value);
-    inputMap[_key] = _value;
+  for (auto &[key, value] : inputMap) {
+    saveElement(File, key);
+    saveElement(File, value);
   }
 }
 template <typename Key, typename Value>
 void Saver::saveElement(std::ofstream &File,
                         std::unordered_map<Key, Value> &inputMap) {
 
-  size_t size{0};
+  size_t size = inputMap.size();
   saveElement(File, size);
-  for (size_t i = 0; i < size; ++i) {
-    Key _key;
-    Value _value;
-    saveElement(File, _key);
-    saveElement(File, _value);
-    inputMap[_key] = _value;
+  for (auto &[key, value] : inputMap) {
+    saveElement(File, key);
+    saveElement(File, value);
   }
 }
 
@@ -91,6 +101,10 @@ template <typename Key, typename Value>
 void Saver::readElement(std::ifstream &File, std::map<Key, Value> &inputMap) {
   size_t size{0};
   readElement(File, size);
+  if (size > 1000000) {
+    std::cerr << "Error in read size of map. Received: " << size << std::endl;
+    exit(READ_ERROR);
+  }
   for (size_t i = 0; i < size; ++i) {
     Key _key;
     Value _value;
@@ -105,6 +119,11 @@ void Saver::readElement(std::ifstream &File,
 
   size_t size{0};
   readElement(File, size);
+  if (size > 1000000) {
+    std::cerr << "Error in read size of unordered_map. Received: " << size
+              << std::endl;
+    exit(READ_ERROR);
+  }
   for (size_t i = 0; i < size; ++i) {
     Key _key;
     Value _value;
@@ -113,12 +132,41 @@ void Saver::readElement(std::ifstream &File,
     inputMap[_key] = _value;
   }
 }
+// template <typename Key, typename Value>
+// void Saver::saveElement( // CHECAR
+//     std::ofstream &File,
+//     std::unordered_map<Key, std::shared_ptr<Value>> &inputMap) {
+//   size_t size = inputMap.size();
+//   saveElement(File, size);
+//   for (auto &[key, ptr] : inputMap) {
+//     saveElement(File, key);
+//     saveElement(File, *ptr);
+//   }
+// }
+// template <typename Key, typename Value>
+// void Saver::readElement(
+//     std::ifstream &File,
+//     std::unordered_map<Key, std::shared_ptr<Value>> &inputMap) { // CHECAR
+//   size_t size = 0;
+//   readElement(File, size);
+//   if (size > 1000000) {
+//     std::cerr << "Error reading unordered_map size\n";
+//     exit(READ_ERROR);
+//   }
+//   for (size_t i = 0; i < size; ++i) {
+//     Key key;
+//     Value value;
+//     readElement(File, key);
+//     readElement(File, value);
+//     inputMap[key] = std::make_shared<Value>(value);
+//   }
+// }
 
-template <typename T> void Saver::saveClass(T &inputClass) {
+template <typename T>
+void Saver::saveClass(std::ofstream &File, T &inputClass) {
   if (std::is_class_v<T>) {
-    auto File = saveFile();
     if (!File) {
-      cout << "Error in saveClass() File, file not found";
+      std::cerr << "Error in saveClass() File, file not found";
       exit(ERROR_FILE);
     }
     auto allMembers = inputClass.getAllMembers();
@@ -128,15 +176,16 @@ template <typename T> void Saver::saveClass(T &inputClass) {
     notClass();
   }
 }
-template <typename T> void Saver::readClass(T &inputClass) {
+template <typename T>
+void Saver::readClass(std::ifstream &File, T &inputClass) {
   if (std::is_class_v<T>) {
-    auto File = readFile();
     if (!File) {
-      cout << "Error in readClass() File, file not found";
+      std::cerr << "Error in readClass() File, file not found";
       exit(ERROR_FILE);
     }
     auto allMembers = inputClass.getAllMembers();
     readElement(File, allMembers);
+    inputClass.setAllMembers(allMembers);
   } else {
     notClass();
   }
@@ -150,42 +199,45 @@ void Saver::saveElement(std::ofstream &File, T &inputStruct) {
 
 template <IsStruct T>
 void Saver::readElement(std::ifstream &File, T &inputStruct) {
-  forEachInTuple(inputStruct.toTuple(),
-                 [&](auto &it) { readElement(File, it); });
+  T struct2;
+  std::apply([&](auto &...args) { ((readElement(File, args)), ...); },
+             struct2.toTuple());
+  inputStruct = struct2;
 }
 
 template <typename... Args> void Saver::saveAllClasses(Args &&...args) {
   truncFile();
-  ((saveClass(std::forward<Args>(args)), ...));
+  auto File = saveFile();
+  ((saveClass(File, std::forward<Args>(args)), ...));
 }
 template <typename... Args> void Saver::readAllClasses(Args &&...args) {
-  ((readClass(std::forward<Args>(args)), ...));
+  auto File = readFile();
+  ((readClass(File, std::forward<Args>(args)), ...));
 }
 
-template <IsStruct T>
+template <IsClass T>
 void Saver::saveElement(std::ofstream &File, shared_ptr<T> &inputClass) {
-  if (std::is_class_v<T>) {
-    if (!File) {
-      cout << "Error in saveClass() File, file not found";
-      exit(ERROR_FILE);
-    }
+  bool exists = static_cast<bool>(inputClass);
+  saveElement(File, exists);
+
+  if (exists) {
     auto allMembers = inputClass->getAllMembers();
     saveElement(File, allMembers);
-
-  } else {
-    notClass();
   }
 }
-template <IsStruct T>
+template <IsClass T>
 void Saver::readElement(std::ifstream &File, shared_ptr<T> &inputClass) {
-  if (std::is_class_v<T>) {
-    if (!File) {
-      cout << "Error in readClass() File, file not found";
-      exit(ERROR_FILE);
+  bool exists = false;
+  readElement(File, exists);
+
+  if (exists) {
+    if (!inputClass) {
+      inputClass = std::make_shared<T>();
+      typename T::AllMembersType allMembers;
+      readElement(File, allMembers);
+      inputClass->setAllMembers(allMembers);
     }
-    auto allMembers = inputClass->getAllMembers();
-    readElement(File, allMembers);
   } else {
-    notClass();
+    inputClass.reset();
   }
 }

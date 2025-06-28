@@ -41,6 +41,10 @@ void Menus::homeMenuOptions(char input) {
     marketNoticesMenu();
     break;
   }
+  case '6': {
+    saveAndExit();
+    break;
+  }
 
   default: {
     printInLanguage("\nInsert a valid option\n", "\nInsira uma opção válida\n");
@@ -57,11 +61,12 @@ void Menus::homeMenu() {
       "Enter '1' to go to the \"Stock Market\" menu\nEnter '2' to go to the "
       "\"Single Stock\" menu\nEnter '3' to go to the \"Full Portifolio\" "
       "menu\nEnter '4' to go to the \"All Transactions\" menu\nEnter '5' to go "
-      "to the \"Market News\" menu\n",
+      "to the \"Market News\" menu\nEnter '6' to close and save the program\n",
       "Insira '1' para ir ao menu \"Mercado de Ações\"\nInsira '2' para ir "
       "ao menu \"Ação única\"\nInsira '3' para ir ao menu \"Portifolio "
       "Completo\"\nInsira '4' para ir ao menu \"Todas as Transações\"\nInsira "
-      "'5' para ir ao menu \"Noticias de Mercado\"\n");
+      "'5' para ir ao menu \"Noticias de Mercado\"\nInsira '6' para fechar e "
+      "salvar o programa\n");
 
   tempInput = SysFuncsManager.getSingleKey();
   homeMenuOptions(tempInput);
@@ -326,8 +331,6 @@ void Menus::saveAndExit() {
   Saver::saveAllClasses(Market::getMarket(), Tick::getInstance(),
                         Portifolio::getPortifolio(),
                         marketEvents::getMarketEvents());
-  Tick::getInstance().endProgram();
-  cout << clear << bold << greenOutput;
-  printInLanguage("Saving and exiting\n", "Salvando e saindo");
+  exit(0);
   cout << noBold;
 }

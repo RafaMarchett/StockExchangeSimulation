@@ -16,14 +16,12 @@ _marketEvents::allMembers marketEvents::getAllMembers() {
   allMembers.currentEventSector = currentEventSector;
   allMembers.eventTime = eventTime;
   allMembers.bull_or_recessionMarket_value = bull_or_recessionMarket.get();
-  allMembers.bull_or_recessionMarket = allMembers.bull_or_recessionMarket_value;
-
   return allMembers;
 }
 void marketEvents::setAllMembers(const _marketEvents::allMembers &inputStruct) {
   currentEventSector = inputStruct.currentEventSector;
   eventTime = inputStruct.eventTime;
-  bull_or_recessionMarket = inputStruct.bull_or_recessionMarket_value;
+  bull_or_recessionMarket.set(inputStruct.bull_or_recessionMarket_value);
 }
 void marketEvents::generateRandomEvent() {
   passTick();

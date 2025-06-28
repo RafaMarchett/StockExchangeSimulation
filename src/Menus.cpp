@@ -9,15 +9,8 @@
 inline std::atomic<bool> isLoop{false};
 SysFuncs SysFuncsManager;
 Menus::Menus() {}
-void Menus::changeStockOnScreen(bool newState) {
-  Market &tempMarket = Market::getMarket();
-  tempMarket.setStockOnScreen(newState);
-}
 
-void Menus::firstInitialization() {
-  changeStockOnScreen(false);
-  initializeLanguage();
-}
+void Menus::firstInitialization() { initializeLanguage(); }
 
 void Menus::homeMenuOptions(char input) {
   switch (input) {
@@ -54,7 +47,6 @@ void Menus::homeMenuOptions(char input) {
 }
 
 void Menus::homeMenu() {
-  changeStockOnScreen(false);
   char tempInput{'/'};
   cout << clear;
   printInLanguage(
@@ -78,7 +70,6 @@ void Menus::homeMenu() {
 void Menus::allStocksMenu() {
   cout << clear;
   shared_ptr<Market> tempMarket(&Market::getMarket(), [](Market *) {});
-  changeStockOnScreen(true);
   cout << std::endl;
   isLoop = true;
   std::jthread receiveEnter(inputToLoop);

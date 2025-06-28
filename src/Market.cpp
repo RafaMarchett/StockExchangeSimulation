@@ -9,9 +9,7 @@ void Market::startMarket(vector<sharedStock> &tempStocks) {
   }
 }
 
-bool Market::getStockOnScreen() const { return stocksOnScreen; }
 vector<string> Market::getAllSectors() const { return allSectors; }
-void Market::setStockOnScreen(bool newState) { stocksOnScreen = newState; }
 void Market::setAllSectors(const vector<string> &inputString) {
   if (allSectors.empty()) {
     allSectors = inputString;

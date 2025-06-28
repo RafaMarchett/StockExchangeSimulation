@@ -26,9 +26,7 @@ public:
   inline void printAllStocks();
   size_t getNumberOfStocks();
   vector<string> getAllSectors() const;
-  void setStockOnScreen(bool);
   void setAllSectors(const vector<string> &);
-  bool getStockOnScreen() const;
   sharedStock findTicker(const string &);
 
   _Market::allMembers getAllMembers();

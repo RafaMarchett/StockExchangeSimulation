@@ -10,7 +10,6 @@ public:
 private:
   Menus();
   static void voidMenu();
-  static void changeStockOnScreen(bool);
   static void homeMenuOptions(char);
   static void inputToLoop();
   static void enterSingleChar(char &);

@@ -20,6 +20,8 @@ struct allMembers {
 
 class Stock {
 public:
+  using AllMembersType = _Stock::allMembers;
+  Stock() = default;
   friend class Market;
   string getTicker() const;
   double getPrice() const;

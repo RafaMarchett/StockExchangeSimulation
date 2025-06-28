@@ -1,5 +1,6 @@
 #include "../headers/Portifolio.h"
 #include "../headers/Market.h"
+#include "../headers/Menus.h"
 #include "../headers/SystemFunctions.h"
 #include "../headers/Tick.h"
 #include <compare>
@@ -60,7 +61,10 @@ void Portifolio::buyStock(const sharedStock &buyedStock,
     if (_moneyInAccount < buyedPrice) {
       printInLanguage("You don't have enough money in the account\n",
                       "Você não tem dinheiro suficiente na conta\n");
-      sleep(std::chrono::milliseconds(MS_ERROR_SLEEP));
+      SysFuncs SysFuncsManager;
+      printInLanguage("Press 'Enter' to continue...",
+                      "Pressione 'Enter' para continuar...");
+      SysFuncsManager.pressEnterToContinue();
       return;
     }
 
@@ -76,7 +80,7 @@ void Portifolio::buyStock(const sharedStock &buyedStock,
       tempStack.push(stockPrice);
       stockHistoryInPortifolio.try_emplace(buyedStock->getTicker(), tempStack);
     }
-    _moneyInAccount -= buyedPrice * stockCount;
+    _moneyInAccount -= buyedPrice;
     calculateTotalParticipation(buyedStock);
     newTransaction(buyedStock->getTicker(), stockPrice, stockCount, true);
   }
@@ -135,8 +139,9 @@ void Portifolio::printFullPortifolio() const {
                << stockHistoryInPortifolio.at(stock.first).top() << bold
                << "\nDinheiro total no portifolio: " << noBold << _totalMoney
                << "\n\n";
-        } else
-          exit(2);
+        } else {
+          initializeLanguage();
+        }
       }
       printInLanguage("Press 'Enter' to continue...",
                       "Pressione 'Enter' para continuar...");
@@ -154,8 +159,7 @@ void Portifolio::printFullPortifolio() const {
 
 _Portifolio::allMembers Portifolio::getAllMembers() {
   _Portifolio::allMembers allMembers;
-  allMembers.fullPortifolio.insert(fullPortifolio.begin(),
-                                   fullPortifolio.end());
+  allMembers.fullPortifolio = fullPortifolio;
   allMembers._moneyInAccount = _moneyInAccount;
   allMembers._totalMoney = _totalMoney;
   allMembers.stockHistoryInPortifolio.insert(stockHistoryInPortifolio.begin(),
@@ -167,8 +171,7 @@ _Portifolio::allMembers Portifolio::getAllMembers() {
 }
 
 void Portifolio::setAllMembers(const _Portifolio::allMembers &inputStruct) {
-  fullPortifolio.insert(inputStruct.fullPortifolio.begin(),
-                        inputStruct.fullPortifolio.end());
+  fullPortifolio = inputStruct.fullPortifolio;
   _moneyInAccount = inputStruct._moneyInAccount;
   _totalMoney = inputStruct._totalMoney;
   stockHistoryInPortifolio.insert(inputStruct.stockHistoryInPortifolio.begin(),
@@ -187,7 +190,8 @@ void Portifolio::updatePortifolioHistory() {
       stockInHistory->second.push(
           mkt.findTicker(stock.first)
               ->getPrice()); // Push current price in history
-      tempTotalMoney += mkt.findTicker(stock.first)->getPrice();
+      tempTotalMoney +=
+          mkt.findTicker(stock.first)->getPrice() * stock.second.totalStocks;
     }
   }
   tempTotalMoney += _moneyInAccount;
